@@ -29,8 +29,8 @@ const Post = ({
             <h2>{title}</h2>
             <div>{body}</div>
             <hr />
-            <Route path="/author" component={() => <div>author</div>} />
-            <Route path="/comments" component={() => <div>comments</div>} />
+            <Route path="/p/:postId/author" component={() => <div>author</div>} />
+            <Route path="/p/:postId/comments" component={() => <div>comments</div>} />
             {author ? <Author {...author} /> : <span>loading...</span>}
         </div >
     )
