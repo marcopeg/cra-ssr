@@ -17,9 +17,8 @@ export const dataRender = url => new Promise((resolve) => {
     }, 1000)
 
     registerListener([{
-        action: 'app::is::ready',
+        type: 'app::is::ready',
         handler: () => () => {
-            console.log('APP IS READY FIRED')
             clearTimeout(timer)
             resolve(store.getState())
         },

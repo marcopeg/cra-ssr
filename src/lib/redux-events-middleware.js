@@ -8,7 +8,7 @@ export const reduxEventsMiddleware = store => next => (action) => {
     // console.log(`EVENT: ${action.type}`)
     // console.log(listeners)
     listeners
-        .filter(listener => listener.action === action.type)
+        .filter(listener => listener.type === action.type)
         .forEach((listener) => {
             try {
                 if (listener.async) {

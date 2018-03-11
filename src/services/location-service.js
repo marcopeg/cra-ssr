@@ -1,25 +1,18 @@
-/*
-    eslint
-        import/prefer-default-export: off
-*/
+/**
+ * Register to the history manager and trigger the history
+ * events as redux actions
+ */
 
-import createHistoryRouter from 'lib/redux-history-router'
-import { fetchPostById } from 'services/posts-service'
+export const LOCATION_CHANGE = '@@location::change'
 
-const applyRoutes = createHistoryRouter([
-    {
-        path: '/p/:postId',
-        action: ({ postId }) => (dispatch, getState) => {
-            const { post } = getState()
-            if (post.id !== postId || post.data === null) {
-                dispatch(fetchPostById(postId))
-            }
-        },
-    },
-])
+export const init = (store, history) => dispatch =>
+    history.listen(match => dispatch({
+        type: LOCATION_CHANGE,
+        payload: match,
+    }))
 
-export const init = (store, history) => (dispatch, getState) =>
-    history.listen(match => applyRoutes(match)(dispatch, getState))
-
-export const start = (store, history) => (dispatch, getState) =>
-    applyRoutes(history.location)(dispatch, getState)
+export const start = (store, history) => dispatch =>
+    dispatch({
+        type: LOCATION_CHANGE,
+        payload: history.location,
+    })
