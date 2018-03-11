@@ -8,8 +8,7 @@
 
 const services = [
     require('./location-service'),
-    // require('./products-service'),
-    // require('./clock-service'),
+    require('./posts-service'),
 ]
 
 export const configServices = async (store) => {

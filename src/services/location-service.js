@@ -3,17 +3,14 @@
         import/prefer-default-export: off
 */
 
-import { history } from '../boot/store'
-import createHistoryRouter from '../lib/redux-history-router'
-// import { fetchProductById } from 'services/products-service'
+import { history } from 'boot/store'
+import createHistoryRouter from 'lib/redux-history-router'
+import { fetchPostById } from 'services/posts-service'
 
 const applyRoutes = createHistoryRouter([
     {
-        path: '/p/:id',
-        action: ({ id }) => () => {
-            // dispatch(fetchProductById(productId))
-            console.log('fetch product', id)
-        },
+        path: '/p/:postId',
+        action: ({ postId }) => dispatch => dispatch(fetchPostById(postId)),
     },
 ])
 
