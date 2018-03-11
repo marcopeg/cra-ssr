@@ -16,7 +16,10 @@ import Post from '../Post'
 
 const App = () => (
     <div className="App">
-        <Helmet><title>[cra-ssr] server side rendering for create react app</title></Helmet>
+        <Helmet>
+            <html lang="en" />
+            <title>[cra-ssr] server side rendering for create react app</title>
+        </Helmet>
         <header className="App-header">
             {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <div>
