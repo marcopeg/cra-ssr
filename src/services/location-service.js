@@ -10,8 +10,8 @@ const applyRoutes = createHistoryRouter([
     {
         path: '/p/:postId',
         action: ({ postId }) => (dispatch, getState) => {
-            const { post } = getState()
-            if (post.id !== postId) {
+            const { post } = getState()
+            if (post.id !== postId || post.data === null) {
                 dispatch(fetchPostById(postId))
             }
         },

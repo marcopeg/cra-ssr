@@ -10,11 +10,11 @@ import { reduxEventsMiddleware } from '../lib/redux-events-middleware'
 import { configServices } from '../services'
 import { configListeners } from '../listeners'
 import reducers from '../reducers'
+import { init as initRequest } from '../lib/request'
 
 export const history = createHistory()
 
 const initialState = window.REDUX_INITIAL_STATE || {}
-console.log(initialState)
 const enhancers = []
 const middleware = [
     thunk,
@@ -46,6 +46,7 @@ export const connectedHistory = syncHistoryWithStore(history, store)
 
 export const isReady = new Promise(async (resolve, reject) => {
     try {
+        await initRequest(store, history)(store.dispatch, store.getState)
         await configListeners()
         await configServices(store, history)
         resolve()
