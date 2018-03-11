@@ -21,8 +21,8 @@ const middleware = [
     reduxEventsMiddleware,
 ]
 
-// redux dev tools
-if (process.env.NODE_ENV === 'development') {
+// redux dev tools (development & client only)
+if (process.env.NODE_ENV === 'development' && !process.env.SSR) {
     const { devToolsExtension } = window
 
     if (typeof devToolsExtension === 'function') {
@@ -46,13 +46,14 @@ export const connectedHistory = syncHistoryWithStore(history, store)
 export const isReady = new Promise(async (resolve, reject) => {
     try {
         await configListeners()
-        await configServices(store)
+        await configServices(store, history)
         resolve()
     } catch (err) {
         reject()
     }
 })
 
-if (process.env.NODE_ENV === 'development') {
+// redux dev tools (development & client only)
+if (process.env.NODE_ENV === 'development' && !process.env.SSR) {
     window.store = store
 }
