@@ -6,6 +6,9 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+
+import { POST_ROUTE } from 'listeners/location-listener'
+
 // import logo from './logo.svg'
 import './App.css'
 
@@ -31,7 +34,7 @@ const App = () => (
             </div>
         </header>
         <Route exact path="/" component={Dashboard} />
-        <Route exact path="/p/:id" component={Post} />
+        <Route exact path={POST_ROUTE} component={Post} />
     </div>
 )
 

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
+import { Route } from 'react-router-dom'
 
 import Author from 'components/Author'
 
@@ -27,6 +28,9 @@ const Post = ({
             <Helmet><title>{`post - ${title}`}</title></Helmet>
             <h2>{title}</h2>
             <div>{body}</div>
+            <hr />
+            <Route path="/author" component={() => <div>author</div>} />
+            <Route path="/comments" component={() => <div>comments</div>} />
             {author ? <Author {...author} /> : <span>loading...</span>}
         </div >
     )

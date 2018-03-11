@@ -1,43 +1,37 @@
 
 import logger from 'lib/logger'
-import Route from 'route-parser'
+import matchPath from 'react-router/es/matchPath'
 
-const createHistoryRouter = (routesDef) => {
+const createHistoryRouter = routes => location => (dispatch) => {
+    if (!location) {
+        return
+    }
 
-    const routes = routesDef.map(route => ({
-        ...route,
-        test: new Route(route.path),
-    }))
+    const { pathname } = location
 
-    return location => (dispatch) => {
-        if (!location) {
-            return
+    try {
+        const { action, match } = routes
+            .map(route => ({
+                ...route,
+                match: matchPath(pathname, {
+                    path: route.path,
+                }),
+            }))
+            .filter(route => route.match)
+            .shift()
+
+        if (action) {
+            dispatch(action(match.params, match))
+            dispatch({
+                type: '@@route::fired',
+                payload: {
+                    ...location,
+                    params: match.params,
+                },
+            })
         }
-
-        const { pathname } = location
-
-        try {
-            const { action, match } = routes
-                .map(route => ({
-                    ...route,
-                    match: route.test.match(pathname),
-                }))
-                .filter(route => route.match)
-                .shift()
-
-            if (action) {
-                dispatch(action(match))
-                dispatch({
-                    type: '@@route::fired',
-                    payload: {
-                        ...location,
-                        params: match,
-                    },
-                })
-            }
-        } catch (e) {
-            logger.verbose('Path handler not found for:', pathname)
-        }
+    } catch (e) {
+        logger.verbose('Path handler not found for:', pathname)
     }
 }
 
