@@ -13,7 +13,8 @@ import reducers from '../reducers'
 
 export const history = createHistory()
 
-const initialState = {}
+const initialState = window.REDUX_INITIAL_STATE || {}
+console.log(initialState)
 const enhancers = []
 const middleware = [
     thunk,

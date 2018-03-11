@@ -57,27 +57,25 @@ const prepHTML = (template, {
 
     // if (process.env.NODE_ENV === 'development') {
     //     data = data.replace(/<link href="\/static\/css\/main.([^\s]*).css" rel="stylesheet">/g, '')
-    //     data = data.replace(/\/static\/js\/main.([^\s]*).js/g, '//localhost:3000/static/js/bundle.js')
+        // data = data.replace(/\/static\/js\/main.([^\s]*).js/g, '//localhost:3000/static/js/bundle.js')
     // }
+
+    // data = data.replace(/\/static\/js\/main.([^\s]*).js/g, '//nothing.js')
 
     return data
 }
 
 const ssr = async (req, res) => {
     try {
-        // const filePath = path.resolve(__dirname, './build/index.html')
-        // const htmlTemplate = await readFile(filePath)
+        const filePath = path.resolve(__dirname, './build/index.html')
+        const htmlTemplate = await readFile(filePath)
         const prerender = await staticRender(req.url)
-        console.log(prerender)
-
-        res.send(`<html><div>${prerender.html}</div></html>`)
-
-        // res.send(prepHTML(htmlTemplate, {
-        //     html: '>',
-        //     head: '',
-        //     body: prerender.html,
-        //     state: prerender.initialState,
-        // }))
+        res.send(prepHTML(htmlTemplate, {
+            html: '>',
+            head: '',
+            body: prerender.html,
+            state: prerender.initialState,
+        }))
     } catch (err) {
         res.status(500).send(err.message)
     }

@@ -5,8 +5,10 @@
 
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
-import logo from './logo.svg'
+// import logo from './logo.svg'
 import './App.css'
+
+// console.log(logo)
 
 import Dashboard from '../Dashboard'
 import Post from '../Post'
@@ -14,7 +16,7 @@ import Post from '../Post'
 const App = () => (
     <div className="App">
         <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
+            {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <div>
                 <Link to="/" style={{ color: '#fff' }}>Home</Link>
                 {' | '}

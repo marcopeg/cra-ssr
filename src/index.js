@@ -10,13 +10,13 @@
 // registerServiceWorker();
 
 import React from 'react'
-import { render } from 'react-dom'
+import { hydrate } from 'react-dom'
 import { isReady } from './boot/store'
 import Root from './boot/Root'
 import './index.css'
 
 isReady
-    .then(() => render(<Root />, document.getElementById('root')))
+    .then(() => hydrate(<Root />, document.getElementById('root')))
     .catch((err) => {
         document.body.innerHTML = err ? err.message : 'unknown error'
         console.error(err) // eslint-disable-line

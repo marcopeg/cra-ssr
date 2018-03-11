@@ -2,7 +2,7 @@
 import { createStore as createReduxStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 
-import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
+// import { routerMiddleware } from 'react-router-redux'
 import createHistory from 'history/createMemoryHistory'
 
 import { reduxEventsMiddleware } from '../lib/redux-events-middleware'
@@ -15,7 +15,7 @@ export const createStore = (initialState = {}) => {
     const enhancers = []
     const middleware = [
         thunk,
-        routerMiddleware(history),
+        // routerMiddleware(history),
         reduxEventsMiddleware,
     ]
 
@@ -30,16 +30,13 @@ export const createStore = (initialState = {}) => {
         composedEnhancers,
     )
 
-    // const connectedHistory = syncHistoryWithStore(history, store)
-
     const isReady = new Promise(async (resolve, reject) => {
         try {
             await configListeners()
-            await configServices(store)
+            await configServices(store, history)
             resolve()
         } catch (err) {
-            console.log(err)
-            reject()
+            reject(err)
         }
     })
 
@@ -49,10 +46,7 @@ export const createStore = (initialState = {}) => {
 export const createStaticStore = (initialState = {}) => {
     const history = createHistory()
     const enhancers = []
-    const middleware = [
-        thunk,
-        routerMiddleware(history),
-    ]
+    const middleware = []
 
     const composedEnhancers = compose(
         applyMiddleware(...middleware),
