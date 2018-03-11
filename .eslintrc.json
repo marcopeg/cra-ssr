@@ -1,0 +1,77 @@
+{
+    "parser": "babel-eslint",
+    "extends": [
+        "airbnb"
+    ],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": [ "./src" ]
+            }
+        }
+    },
+    "rules": {
+        "linebreak-style": 0,
+        "semi": [
+            "error",
+            "never"
+        ],
+        "indent": [
+            2,
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "react/jsx-indent": [
+            "error",
+            4
+        ],
+        "react/jsx-indent-props": [
+            "error",
+            4
+        ],
+        "array-bracket-spacing": [
+            "error",
+            "always",
+            {
+                "objectsInArrays": false,
+                "arraysInArrays": false
+            }
+        ],
+        "new-cap": [
+            "error",
+            {
+                "newIsCap": true,
+                "capIsNew": false
+            }
+        ],
+        "space-before-function-paren": [
+            "error",
+            "always"
+        ],
+        "no-use-before-define": [
+            "error",
+            {
+                "functions": false,
+                "classes": true
+            }
+        ],
+        "jsx-a11y/no-static-element-interactions": [
+            0
+        ],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        "function-paren-newline": [
+            "error",
+            "multiline"
+        ]
+    }
+}
