@@ -1,6 +1,6 @@
 
 import logger from 'lib/logger'
-import matchPath from 'react-router/es/matchPath'
+import matchPath from './match-path'
 
 const createHistoryRouter = routes => location => (dispatch) => {
     if (!location) {
