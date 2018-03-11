@@ -7,7 +7,9 @@ const state2props = ({ app }) => ({
 })
 
 const Dashboard = ({ title }) => (
-    <h1>Dashboard - { title }</h1>
+    <div>
+        <h1>Dashboard - { title }</h1>
+    </div>
 )
 
 Dashboard.propTypes = {

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Helmet } from 'react-helmet'
 
 import Author from 'components/Author'
 
@@ -23,7 +24,8 @@ const Post = ({
         <div>loading post {id}</div>
     ) : (
         <div style={{ textAlign: 'left', margin: 20 }}>
-            <h2>{ title }</h2>
+            <Helmet><title>{`post - ${title}`}</title></Helmet>
+            <h2>{title}</h2>
             <div>{body}</div>
             {author ? <Author {...author} /> : <span>loading...</span>}
         </div >

@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 // import logo from './logo.svg'
 import './App.css'
 
@@ -15,6 +16,7 @@ import Post from '../Post'
 
 const App = () => (
     <div className="App">
+        <Helmet><title>[cra-ssr] server side rendering for create react app</title></Helmet>
         <header className="App-header">
             {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <div>
