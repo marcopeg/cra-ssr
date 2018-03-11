@@ -8,8 +8,8 @@ export const initialState = {
  * Actions
  */
 
-export const INIT_FETCH = 'initFetch@post'
-export const SET_DATA = 'setData@post'
+export const INIT_FETCH = 'initFetch@user'
+export const SET_DATA = 'setData@user'
 
 export const initFetch = postId => ({
     type: INIT_FETCH,

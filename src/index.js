@@ -21,3 +21,10 @@ isReady
         document.body.innerHTML = err ? err.message : 'unknown error'
         console.error(err) // eslint-disable-line
     })
+
+// Basic Hot Module Reload
+// this works well with dumb components but has troubles with stateful components
+// https://daveceddia.com/hot-reloading-create-react-app/
+if (module.hot) {
+    module.hot.accept()
+}

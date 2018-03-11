@@ -3,6 +3,11 @@
         import/prefer-default-export: off
 */
 
-export const fetchPostById = postId => () => {
-    console.log('fetch post', postId)
+import { getJSON } from 'lib/request'
+import { initFetch, setData } from 'reducers/post-reducer'
+
+export const fetchPostById = postId => async (dispatch) => {
+    dispatch(initFetch(postId))
+    const data = await getJSON(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+    dispatch(setData(data))
 }
