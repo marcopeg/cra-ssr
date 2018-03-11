@@ -8,6 +8,7 @@ import { Route, Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
 
+import Dashboard from '../Dashboard'
 import Post from '../Post'
 
 const App = () => (
@@ -22,7 +23,7 @@ const App = () => (
                 <Link to="/p/2" style={{ color: '#fff' }}>Product2</Link>
             </div>
         </header>
-        <Route exact path="/" component={() => <div>HOME</div>} />
+        <Route exact path="/" component={Dashboard} />
         <Route exact path="/p/:id" component={Post} />
     </div>
 )
