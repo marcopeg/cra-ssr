@@ -11,6 +11,7 @@ export const initialState = {
 
 export const INIT_FETCH = 'initFetch@post'
 export const SET_DATA = 'setData@post'
+export const INIT_FETCH_COMMENTS = 'initFetchComments@post'
 export const SET_COMMENTS = 'setComments@post'
 
 export const initFetch = postId => ({
@@ -39,6 +40,7 @@ export const actionHandlers = {
         ...state,
         id: action.payload,
         data: null,
+        comments: null,
     }),
     [SET_DATA]: (state, action) => ({
         ...state,

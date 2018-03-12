@@ -8,12 +8,9 @@ import {
     fetchCurrentPostComments,
 } from 'services/posts-service'
 
-export const POST_ROUTE_RADIX = '/p/:postId/'
-export const POST_ROUTE = `${POST_ROUTE_RADIX}:subMenu(author|comments)?`
-
 const applyRoutes = createHistoryRouter([
     {
-        path: POST_ROUTE,
+        path: '/p/:postId/:subMenu(author|comments)?',
         action: ({ postId, subMenu }) => async (dispatch, getState) => {
             // load post data
             const { post } = getState()

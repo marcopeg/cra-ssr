@@ -9,8 +9,6 @@ import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { Route, Link, Redirect } from 'react-router-dom'
 
-import { POST_ROUTE_RADIX } from 'listeners/location-listener'
-
 import Author from 'components/Author'
 import Comments from 'components/Comments'
 
@@ -46,13 +44,13 @@ const Post = ({
             <hr />
             <Route
                 exact
-                path={`${POST_ROUTE_RADIX}`}
+                path="/p/:postId/"
                 component={() => (
                     <Redirect to={`${match.url}/author`} />
                 )}
             />
             <Route
-                path={`${POST_ROUTE_RADIX}(author)`}
+                path="/p*(author)"
                 component={() => (
                     author
                         ? <Author {...author} />
@@ -60,7 +58,7 @@ const Post = ({
                 )}
             />
             <Route
-                path={`${POST_ROUTE_RADIX}(comments)`}
+                path="/p*(comments)"
                 component={() => (
                     comments
                         ? <Comments list={comments} />

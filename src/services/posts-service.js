@@ -28,6 +28,7 @@ export const fetchCurrentPostAuthor = () => async (dispatch, getState) => {
 
 export const fetchCurrentPostComments = () => async (dispatch, getState) => {
     const { post } = getState()
+
     if (post.comments !== null) {
         return
     }
