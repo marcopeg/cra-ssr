@@ -20,7 +20,7 @@ const state2props = ({ post, user }) => ({
     title: post.data ? post.data.title : '',
     body: post.data ? post.data.body : '',
     author: user.data,
-    comments: null,
+    comments: post.comments,
 })
 
 const Post = ({
@@ -49,7 +49,7 @@ const Post = ({
             />
             <Route
                 path={`${POST_ROUTE_RADIX}comments`}
-                component={() => (author ? <Comments {...comments} /> : <span>loading...</span>)}
+                component={() => (comments ? <Comments list={comments} /> : <span>loading...</span>)}
             />
         </div >
     )

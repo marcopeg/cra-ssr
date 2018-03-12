@@ -3,7 +3,6 @@ import { registerListener } from '../lib/redux-events-middleware'
 
 const listeners = [
     require('./location-listener'),
-    // require('./users-listener'),
 ]
 
 // eslint-disable-next-line

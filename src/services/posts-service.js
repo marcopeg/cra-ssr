@@ -4,7 +4,7 @@
 */
 
 import { getJSON } from 'lib/request'
-import { initFetch, setData } from 'reducers/post-reducer'
+import { initFetch, setData, setComments } from 'reducers/post-reducer'
 import { fetchUserById } from 'services/users-service'
 
 export const fetchPostById = postId => async (dispatch) => {
@@ -26,6 +26,12 @@ export const fetchCurrentPostAuthor = () => async (dispatch, getState) => {
     return user.data
 }
 
-export const fetchCurrentPostComments = () => () => {
-    console.log('FETCH COMMENTS')
+export const fetchCurrentPostComments = () => async (dispatch, getState) => {
+    const { post } = getState()
+    if (post.comments !== null) {
+        return
+    }
+
+    const data = await getJSON(`https://jsonplaceholder.typicode.com/comments?postId=${post.id}`)
+    dispatch(setComments(data))
 }
