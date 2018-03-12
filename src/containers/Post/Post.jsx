@@ -30,7 +30,6 @@ const Post = ({
     isLoading,
     author,
     comments,
-    match,
 }) => (
     isLoading ? (
         <div>loading post {id}</div>
@@ -63,7 +62,6 @@ Post.propTypes = {
     body: PropTypes.string.isRequired,
     author: PropTypes.object, // eslint-disable-line
     comments: PropTypes.arrayOf(PropTypes.object), // eslint-disable-line
-    match: PropTypes.object.isRequired, // eslint-disable-line
 }
 
 Post.defaultProps = {

@@ -5,16 +5,16 @@
 
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { ShallowRoot, StaticRoot } from './boot/Root.ssr'
+import { StaticRoot } from './boot/Root.ssr'
 import { registerListener } from './lib/redux-events-middleware'
 import { createStore, createStaticStore } from './boot/store.ssr'
 
 export const dataRender = url => new Promise((resolve) => {
     const { store, history } = createStore({})
     const timer = setTimeout(() => {
-        console.error('TIMEOUT', url)
+        console.error('TIMEOUT', url) // eslint-disable-line
         resolve(store.getState())
-    }, 1000)
+    }, 3000)
 
     registerListener([{
         type: 'app::is::ready',
@@ -25,7 +25,6 @@ export const dataRender = url => new Promise((resolve) => {
     }])
 
     history.push(url)
-    renderToString(<ShallowRoot store={store} history={history} />)
 })
 
 export const staticRender = async (url) => {

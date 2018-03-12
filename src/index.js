@@ -1,22 +1,15 @@
-/* global document */
-
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// 
-// import App from './containers/App';
-// import registerServiceWorker from './registerServiceWorker';
-
-// ReactDOM.render(<App />, document.getElementById('root'));
-// registerServiceWorker();
+/* global document window */
 
 import React from 'react'
 import { hydrate } from 'react-dom'
-import { isReady } from './boot/store'
+import { createStore } from './boot/store'
 import Root from './boot/Root'
 import './index.css'
 
+const { store, history, isReady } = createStore(window.REDUX_INITIAL_STATE || {})
+
 isReady
-    .then(() => hydrate(<Root />, document.getElementById('root')))
+    .then(() => hydrate(<Root store={store} history={history} />, document.getElementById('root')))
     .catch((err) => {
         document.body.innerHTML = err ? err.message : 'unknown error'
         console.error(err) // eslint-disable-line
@@ -27,4 +20,9 @@ isReady
 // https://daveceddia.com/hot-reloading-create-react-app/
 if (module.hot) {
     module.hot.accept()
+}
+
+// redux dev tools (development & client only)
+if (process.env.NODE_ENV === 'development' && !process.env.SSR) {
+    window.store = store
 }
