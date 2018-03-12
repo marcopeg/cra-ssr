@@ -7,7 +7,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, Redirect } from 'react-router-dom'
 
 import { POST_ROUTE_RADIX } from 'listeners/location-listener'
 
@@ -30,6 +30,7 @@ const Post = ({
     isLoading,
     author,
     comments,
+    match,
 }) => (
     isLoading ? (
         <div>loading post {id}</div>
@@ -44,12 +45,25 @@ const Post = ({
             <Link to={`/p/${id}/comments`}>Comments</Link>
             <hr />
             <Route
-                path={`${POST_ROUTE_RADIX}author`}
-                component={() => (author ? <Author {...author} /> : <span>loading...</span>)}
+                exact
+                path={`${POST_ROUTE_RADIX}`}
+                component={() => <Redirect to={`${match.url}/author`} />}
             />
             <Route
-                path={`${POST_ROUTE_RADIX}comments`}
-                component={() => (comments ? <Comments list={comments} /> : <span>loading...</span>)}
+                path={`${POST_ROUTE_RADIX}(author)`}
+                component={() => (
+                    author
+                        ? <Author {...author} />
+                        : <span>loading...</span>
+                )}
+            />
+            <Route
+                path={`${POST_ROUTE_RADIX}(comments)`}
+                component={() => (
+                    comments
+                        ? <Comments list={comments} />
+                        : <span>loading...</span>
+                )}
             />
         </div >
     )
@@ -62,6 +76,7 @@ Post.propTypes = {
     body: PropTypes.string.isRequired,
     author: PropTypes.object, // eslint-disable-line
     comments: PropTypes.arrayOf(PropTypes.object), // eslint-disable-line
+    match: PropType.any.isRequire, // eslint-disable-line
 }
 
 Post.defaultProps = {
