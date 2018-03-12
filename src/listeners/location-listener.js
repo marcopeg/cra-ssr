@@ -3,7 +3,8 @@ import createHistoryRouter from 'lib/redux-history-router'
 import { LOCATION_CHANGE } from 'services/location-service'
 import { fetchPostById } from 'services/posts-service'
 
-export const POST_ROUTE = '/p/:postId/(author|comments)?'
+export const POST_ROUTE_RADIX = '/p/:postId/'
+export const POST_ROUTE = `${POST_ROUTE_RADIX}(author|comments)?`
 
 const applyRoutes = createHistoryRouter([
     {

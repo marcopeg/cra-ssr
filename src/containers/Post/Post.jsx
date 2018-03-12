@@ -1,10 +1,18 @@
+/*
+    eslint
+        jsx-a11y/anchor-is-valid: off
+*/
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
-import { Route } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
+
+import { POST_ROUTE_RADIX } from 'listeners/location-listener'
 
 import Author from 'components/Author'
+import Comments from 'components/Comments'
 
 const state2props = ({ post, user }) => ({
     id: post.id,
@@ -12,6 +20,7 @@ const state2props = ({ post, user }) => ({
     title: post.data ? post.data.title : '',
     body: post.data ? post.data.body : '',
     author: user.data,
+    comments: null,
 })
 
 const Post = ({
@@ -20,6 +29,8 @@ const Post = ({
     body,
     isLoading,
     author,
+    comments,
+    match,
 }) => (
     isLoading ? (
         <div>loading post {id}</div>
@@ -29,9 +40,18 @@ const Post = ({
             <h2>{title}</h2>
             <div>{body}</div>
             <hr />
-            <Route path="/p/:postId/author" component={() => <div>author</div>} />
-            <Route path="/p/:postId/comments" component={() => <div>comments</div>} />
-            {author ? <Author {...author} /> : <span>loading...</span>}
+            <Link to={`/p/${id}/author`}>Author</Link>
+            {' | '}
+            <Link to={`/p/${id}/comments`}>Comments</Link>
+            <hr />
+            <Route
+                path={`${POST_ROUTE_RADIX}author`}
+                component={() => (author ? <Author {...author} /> : <span>loading...</span>)}
+            />
+            <Route
+                path={`${POST_ROUTE_RADIX}comments`}
+                component={() => (author ? <Comments {...comments} /> : <span>loading...</span>)}
+            />
         </div >
     )
 )
@@ -42,11 +62,14 @@ Post.propTypes = {
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
     author: PropTypes.object, // eslint-disable-line
+    comments: PropTypes.arrayOf(PropTypes.object), // eslint-disable-line
+    match: PropTypes.object.isRequired, // eslint-disable-line
 }
 
 Post.defaultProps = {
     id: null,
     author: null,
+    comments: null,
 }
 
 export default connect(state2props)(Post)

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 const Author = ({ name }) => (
     <div>
-        <hr />
         <div>
             by: {name}
         </div>
