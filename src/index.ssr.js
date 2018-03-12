@@ -27,15 +27,14 @@ const renderInitialState = (url, history, timeout) => new Promise((resolve) => {
     history.push(url)
 })
 
-export const staticRender = async (url, timeout) => {
+export const staticRender = async (url, initialState = {}, timeout) => {
     const history = createHistory()
-    const { store } = createStore(history, {})
+    const { store } = createStore(history, initialState)
 
     await renderInitialState(url, history, timeout)
 
-    const html = renderToString(<RootStatic store={store} url={url} context={{}} />)
     return {
-        html,
+        html: renderToString(<RootStatic store={store} url={url} context={{}} />),
         initialState: store.getState(),
     }
 }
