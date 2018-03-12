@@ -3,10 +3,12 @@
 import React from 'react'
 import { hydrate } from 'react-dom'
 import { createStore } from './boot/store'
+import createHistory from 'history/createBrowserHistory'
 import Root from './boot/Root'
 import './index.css'
 
-const { store, history, isReady } = createStore(window.REDUX_INITIAL_STATE || {})
+const history = createHistory()
+const { store, isReady } = createStore(history, window.REDUX_INITIAL_STATE || {})
 
 isReady
     .then(() => hydrate(<Root store={store} history={history} />, document.getElementById('root')))

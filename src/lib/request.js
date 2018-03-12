@@ -35,7 +35,7 @@ const wrappedFetch = async (url, config = null) => {
     onRequestStart(url)
     try {
         if (process.env.NODE_ENV === 'development') {
-            await pause(500)
+            await pause(1)
         }
         const res = await fetch(url, config)
         onRequestComplete(url)

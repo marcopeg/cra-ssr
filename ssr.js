@@ -77,7 +77,7 @@ const ssr = async (req, res) => {
     try {
         const filePath = path.resolve(__dirname, './build/index.html')
         const htmlTemplate = await readFile(filePath)
-        const prerender = await staticRender(req.url)
+        const prerender = await staticRender(req.url, 3000)
         const helmet = Helmet.renderStatic()
 
         res.send(prepHTML(htmlTemplate, {

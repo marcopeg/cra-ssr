@@ -1,6 +1,5 @@
 /*
     eslint
-        import/prefer-default-export: off,
         react/prop-types: off
 */
 
@@ -10,10 +9,12 @@ import { StaticRouter } from 'react-router-dom'
 
 import App from '../containers/App'
 
-export const StaticRoot = ({ store, url, context }) => (
+const RootStatic = ({ store, url, context }) => (
     <Provider store={store}>
         <StaticRouter location={url} context={context}>
             <App />
         </StaticRouter>
     </Provider>
 )
+
+export default RootStatic

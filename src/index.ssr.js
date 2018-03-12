@@ -5,34 +5,37 @@
 
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { StaticRoot } from './boot/Root.ssr'
+import createHistory from 'history/createMemoryHistory'
+import RootStatic from './boot/RootStatic'
 import { registerListener } from './lib/redux-events-middleware'
-import { createStore, createStaticStore } from './boot/store.ssr'
+import { createStore } from './boot/store'
 
-export const dataRender = url => new Promise((resolve) => {
-    const { store, history } = createStore({})
+const renderInitialState = (url, history, timeout) => new Promise((resolve) => {
     const timer = setTimeout(() => {
         console.error('TIMEOUT', url) // eslint-disable-line
-        resolve(store.getState())
-    }, 3000)
+        resolve()
+    }, timeout)
 
     registerListener([{
         type: 'app::is::ready',
         handler: () => () => {
             clearTimeout(timer)
-            resolve(store.getState())
+            resolve()
         },
     }])
 
     history.push(url)
 })
 
-export const staticRender = async (url) => {
-    const initialState = await dataRender(url)
-    const { store } = createStaticStore(initialState)
-    const html = renderToString(<StaticRoot store={store} url={url} context={{}} />)
+export const staticRender = async (url, timeout) => {
+    const history = createHistory()
+    const { store } = createStore(history, {})
+
+    await renderInitialState(url, history, timeout)
+
+    const html = renderToString(<RootStatic store={store} url={url} context={{}} />)
     return {
         html,
-        initialState,
+        initialState: store.getState(),
     }
 }

@@ -6,8 +6,7 @@
 import { createStore as createReduxStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 
-import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
-import createHistory from 'history/createBrowserHistory'
+import { routerMiddleware } from 'react-router-redux'
 
 import { reduxEventsMiddleware } from '../lib/redux-events-middleware'
 import { configServices } from '../services'
@@ -15,8 +14,7 @@ import { configListeners } from '../listeners'
 import reducers from '../reducers'
 import { init as initRequest } from '../lib/request'
 
-export const createStore = (initialState = {}) => {
-    const history = createHistory()
+export const createStore = (history, initialState = {}) => {
     const enhancers = []
     const middleware = [
         thunk,
