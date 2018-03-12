@@ -5,7 +5,19 @@
 
 import { getJSON } from 'lib/request'
 import { initFetch, setData, setComments } from 'reducers/post-reducer'
+import {
+    initFetch as initPosts,
+    setItems as setPosts,
+} from 'reducers/posts-list-reducer'
 import { fetchUserById } from 'services/users-service'
+
+export const fetchPosts = () => async (dispatch) => {
+    dispatch(initPosts())
+    const items = await getJSON('https://jsonplaceholder.typicode.com/posts')
+    dispatch(setPosts(items))
+
+    return items
+}
 
 export const fetchPostById = postId => async (dispatch) => {
     dispatch(initFetch(postId))
