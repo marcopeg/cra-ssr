@@ -81,6 +81,13 @@ const ssr = async (req, res) => {
         const prerender = await staticRender(req.url, initialState, 3000)
         const helmet = Helmet.renderStatic()
 
+        // handle simple redirect
+        // @TODO: implement status
+        if (prerender.context.action === 'REPLACE') {
+            res.redirect(prerender.context.url)
+            return
+        }
+
         res.send(prepHTML(htmlTemplate, {
             html: helmet.htmlAttributes.toString(),
             head: [

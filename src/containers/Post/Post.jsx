@@ -47,7 +47,9 @@ const Post = ({
             <Route
                 exact
                 path={`${POST_ROUTE_RADIX}`}
-                component={() => <Redirect to={`${match.url}/author`} />}
+                component={() => (
+                    <Redirect to={`${match.url}/author`} />
+                )}
             />
             <Route
                 path={`${POST_ROUTE_RADIX}(author)`}
@@ -76,7 +78,7 @@ Post.propTypes = {
     body: PropTypes.string.isRequired,
     author: PropTypes.object, // eslint-disable-line
     comments: PropTypes.arrayOf(PropTypes.object), // eslint-disable-line
-    match: PropType.any.isRequire, // eslint-disable-line
+    match: PropTypes.any.isRequired, // eslint-disable-line
 }
 
 Post.defaultProps = {
