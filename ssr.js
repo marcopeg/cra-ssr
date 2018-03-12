@@ -101,15 +101,3 @@ app.use(express.static(path.resolve(__dirname, './build')))
 app.get('*', ssr)
 
 app.listen(PORT, () => winston.info(`[ssr] server running on ${PORT}`))
-
-/*
-
-
-staticRender('/products/1555')
-    .then(res => {
-        console.log(res)
-    })
-    .catch(err => {
-        console.log(err)
-    })
-*/
