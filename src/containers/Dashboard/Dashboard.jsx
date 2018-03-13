@@ -21,7 +21,7 @@ const dispatch2props = {
 
 class Dashboard extends React.Component {
     componentWillMount () {
-        setTimeout(() => this.props.fetchPosts(), 250)
+        this.props.fetchPosts()
     }
 
     render () {
