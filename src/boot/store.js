@@ -8,18 +8,20 @@ import thunk from 'redux-thunk'
 
 import { routerMiddleware } from 'react-router-redux'
 
-import { reduxEventsMiddleware } from '../lib/redux-events-middleware'
+import { ReduxEvents } from '../lib/redux-events-middleware'
 import { configServices } from '../services'
 import { configListeners } from '../listeners'
 import reducers from '../reducers'
 import { init as initRequest } from '../lib/request'
 
 export const createStore = (history, initialState = {}) => {
+    const events = new ReduxEvents()
+
     const enhancers = []
     const middleware = [
         thunk,
         routerMiddleware(history),
-        reduxEventsMiddleware,
+        events.createReduxMiddleware(),
     ]
 
     // redux dev tools (development & client only)
@@ -47,7 +49,7 @@ export const createStore = (history, initialState = {}) => {
     const isReady = new Promise(async (resolve, reject) => {
         try {
             await initRequest(store, history)(store.dispatch, store.getState)
-            await configListeners()
+            await configListeners(events)
             await configServices(store, history)
             resolve()
         } catch (err) {
@@ -55,5 +57,10 @@ export const createStore = (history, initialState = {}) => {
         }
     })
 
-    return { store, history, isReady }
+    return {
+        store,
+        history,
+        isReady,
+        events,
+    }
 }

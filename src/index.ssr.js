@@ -8,16 +8,21 @@ import { renderToString } from 'react-dom/server'
 import createHistory from 'history/createMemoryHistory'
 import Root from './boot/Root'
 import RootStatic from './boot/RootStatic'
-import { registerListener } from './lib/redux-events-middleware'
 import { createStore } from './boot/store'
 
-const renderInitialState = (url, store, history, timeout) => new Promise((resolve) => {
+const renderInitialState = ({
+    url,
+    store,
+    history,
+    events,
+    timeout,
+}) => new Promise((resolve) => {
     const timer = setTimeout(() => {
         console.error('TIMEOUT', url) // eslint-disable-line
         resolve()
     }, timeout)
 
-    registerListener([{
+    events.registerListener([{
         type: 'app::is::ready',
         handler: () => () => {
             clearTimeout(timer)
@@ -31,10 +36,17 @@ const renderInitialState = (url, store, history, timeout) => new Promise((resolv
 
 export const staticRender = async (url, initialState = {}, timeout) => {
     const history = createHistory()
-    const { store } = createStore(history, initialState)
+    const { store, events } = createStore(history, initialState)
     const context = {}
 
-    await renderInitialState(url, store, history, timeout)
+    await renderInitialState({
+        url,
+        store,
+        history,
+        events,
+        timeout,
+    })
+
     const html = renderToString(<RootStatic store={store} url={url} context={context} />)
 
     return {

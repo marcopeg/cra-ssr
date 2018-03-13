@@ -1,12 +1,12 @@
 /* eslint global-require: off */
-import { registerListener } from '../lib/redux-events-middleware'
+// import { registerListener } from '../lib/redux-events-middleware'
 
 const listeners = [
     require('./location-listener'),
 ]
 
 // eslint-disable-next-line
-export const configListeners = () =>
+export const configListeners = (events) =>
     listeners
         .map(listener => listener.default)
-        .map(registerListener)
+        .map(listener => events.registerListener(listener))
