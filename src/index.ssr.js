@@ -14,7 +14,6 @@ const renderInitialState = ({
     url,
     store,
     history,
-    events,
     timeout,
 }) => new Promise((resolve) => {
     const timer = setTimeout(() => {
@@ -22,13 +21,11 @@ const renderInitialState = ({
         resolve()
     }, timeout)
 
-    events.registerListener([{
-        type: 'app::is::ready',
-        handler: () => () => {
-            clearTimeout(timer)
-            resolve()
-        },
-    }])
+    const { ssr } = store.getState()
+    ssr.once('complete', () => {
+        clearTimeout(timer)
+        resolve()
+    })
 
     history.push(url)
     renderToString(<Root store={store} history={history} />)

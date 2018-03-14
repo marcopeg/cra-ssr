@@ -12,7 +12,14 @@ import {
 import { fetchUserById } from 'services/users-service'
 
 export const fetchPosts = () => async (dispatch, getState) => {
-    const { ssr } = getState()
+    const { ssr, postsList } = getState()
+
+    // check local cache to avoid to reload posts
+    if (postsList.items !== null) {
+        return postsList.items
+    }
+
+    // get fresh posts
     dispatch(initPosts())
     console.log('load posts')
     const items = await ssr.await(getJSON('https://jsonplaceholder.typicode.com/posts'))
@@ -21,9 +28,11 @@ export const fetchPosts = () => async (dispatch, getState) => {
     return items
 }
 
-export const fetchPostById = postId => async (dispatch) => {
+export const fetchPostById = postId => async (dispatch, getState) => {
+    const { ssr } = getState()
+
     dispatch(initFetch(postId))
-    const data = await getJSON(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+    const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/posts/${postId}`))
     dispatch(setData(data))
 
     return data
@@ -41,12 +50,12 @@ export const fetchCurrentPostAuthor = () => async (dispatch, getState) => {
 }
 
 export const fetchCurrentPostComments = () => async (dispatch, getState) => {
-    const { post } = getState()
+    const { ssr, post } = getState()
 
     if (post.comments !== null) {
         return
     }
 
-    const data = await getJSON(`https://jsonplaceholder.typicode.com/comments?postId=${post.id}`)
+    const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/comments?postId=${post.id}`))
     dispatch(setComments(data))
 }
