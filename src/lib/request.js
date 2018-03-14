@@ -27,7 +27,7 @@ const onRequestComplete = (url) => {
             onRequestComplete.dispatch({ type: 'app::is::ready' })
             onRequestComplete.fired = true
         }
-    }, 10)
+    }, 20)
 }
 
 // eslint-disable-next-line
