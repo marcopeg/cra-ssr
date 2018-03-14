@@ -11,9 +11,11 @@ import {
 } from 'reducers/posts-list-reducer'
 import { fetchUserById } from 'services/users-service'
 
-export const fetchPosts = () => async (dispatch) => {
+export const fetchPosts = () => async (dispatch, getState) => {
+    const { ssr } = getState()
     dispatch(initPosts())
-    const items = await getJSON('https://jsonplaceholder.typicode.com/posts')
+    console.log('load posts')
+    const items = await ssr.await(getJSON('https://jsonplaceholder.typicode.com/posts'))
     dispatch(setPosts(items))
 
     return items
