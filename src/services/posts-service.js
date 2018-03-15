@@ -21,7 +21,6 @@ export const fetchPosts = () => async (dispatch, getState) => {
 
     // get fresh posts
     dispatch(initPosts())
-    console.log('load posts')
     const items = await ssr.await(getJSON('https://jsonplaceholder.typicode.com/posts'))
     dispatch(setPosts(items))
 

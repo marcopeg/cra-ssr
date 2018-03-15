@@ -17,13 +17,19 @@ const createContext = () => {
 
     const emit = (action) => {
         upsert(action)
-        callbacks[action].map((ticket) => {
-            ticket.fn()
+        callbacks[action].forEach((ticket) => {
             if (ticket.once) {
                 ticket.off()
             }
+            ticket.fn()
         })
-        console.log(callbacks[action])
+    }
+
+    const checkStack = () => {
+        if (awaitStack.length <= 0) {
+            emit('complete')
+        }
+        return awaitStack.length
     }
 
     const unsubscribe = (action, ticket) => {
@@ -34,23 +40,19 @@ const createContext = () => {
     const subscribe = (action, fn, once = false) => {
         upsert(action)
         const ticket = { fn, once }
-
         ticket.off = () => unsubscribe(action, ticket)
 
         callbacks[action].push(ticket)
+        setTimeout(checkStack)
         return ticket
     }
 
-    const checkStack = () => {
-        if (awaitStack.length <= 0) {
-            emit('complete')
-        }
-    }
-
     const reducer = {
+        checkStack,
         on: (action, fn) => subscribe(action, fn, false),
         once: (action, fn) => subscribe(action, fn, true),
         await: (p) => {
+            console.log('push in stack')
             awaitStack.push(p)
 
             p.then(() => {

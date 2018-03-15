@@ -17,7 +17,7 @@ import { ReduxEvents } from '../lib/redux-events-middleware'
 import { configServices } from '../services'
 import { configListeners } from '../listeners'
 import reducers from '../reducers'
-import { init as initRequest } from '../lib/request'
+// import { init as initRequest } from '../lib/request'
 import createSSRContext from '../lib/ssr'
 
 export const createStore = (history, initialState = {}) => {
@@ -59,7 +59,7 @@ export const createStore = (history, initialState = {}) => {
 
     const isReady = new Promise(async (resolve, reject) => {
         try {
-            await initRequest(store, history)(store.dispatch, store.getState)
+            // await initRequest(store, history)(store.dispatch, store.getState)
             await configListeners(events)
             await configServices(store, history)
             resolve()
