@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchCurrentUser } from 'services/users-service'
 
-import UserPosts from 'containers/UserPosts'
+import UserPosts from './UserPosts'
 
 const state2props = ({ users }, { userId }) => ({
     id: userId,

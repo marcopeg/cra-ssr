@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Route, Link } from 'react-router-dom'
 import { fetchUsers } from 'services/users-service'
-import UserDetails from 'containers/UserDetails'
+import UserDetails from './UserDetails'
 
 const state2props = ({ app, users }) => ({
     title: app.name,
