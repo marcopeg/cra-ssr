@@ -15,6 +15,9 @@ import './App.css'
 import Dashboard from '../Dashboard'
 import Post from '../Post'
 
+// Side effected tree
+import Users from '../Users'
+
 const App = () => (
     <div className="App">
         <Helmet>
@@ -29,10 +32,13 @@ const App = () => (
                 <Link to="/p/1" style={{ color: '#fff' }}>Product1</Link>
                 {' | '}
                 <Link to="/p/2" style={{ color: '#fff' }}>Product2</Link>
+                {' | '}
+                <Link to="/u/" style={{ color: '#fff' }}>Users</Link>
             </div>
         </header>
         <Route exact path="/" component={Dashboard} />
-        <Route exact path="/p/:postId*" component={Post} />
+        <Route exact path="/p/*" component={Post} />
+        <Route path="/u*" component={Users} />
     </div>
 )
 

@@ -7,5 +7,6 @@ export default {
     postsList: require('./posts-list-reducer').default,
     post: require('./post-reducer').default,
     user: require('./user-reducer').default,
+    users: require('./users-reducer').default,
     routing,
 }

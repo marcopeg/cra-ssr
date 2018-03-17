@@ -31,23 +31,20 @@ require('isomorphic-fetch')
 // }
 
 // eslint-disable-next-line
-// const wrappedFetch = async (url, config = null) => {
-//     // onRequestStart(url)
-//     try {
-//         if (process.env.NODE_ENV === 'development') {
-//             await pause(1)
-//         }
-//         const res = await fetch(url, config)
-//         // onRequestComplete(url)
-//         return res
-//     } catch (err) {
-//         throw err
-//     }
-// }
+const wrappedFetch = async (url, config = null) => {
+    try {
+        if (process.env.NODE_ENV === 'development') {
+            await pause(500)
+        }
+        return fetch(url, config)
+    } catch (err) {
+        throw err
+    }
+}
 
 export const getJSON = async (url, config = null) => {
     try {
-        const res = await fetch(url, config)
+        const res = await wrappedFetch(url, config)
         return await res.json()
     } catch (err) {
         throw err
@@ -60,4 +57,4 @@ export const getJSON = async (url, config = null) => {
 //     // onRequestComplete(null)
 // }
 
-export default fetch
+export default wrappedFetch
