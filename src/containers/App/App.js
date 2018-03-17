@@ -13,6 +13,7 @@ import Posts from 'containers/Posts'
 import PostDetails from 'containers/PostDetails'
 // Side effected tree
 import Users from 'containers/Users'
+import Estimate from 'containers/Estimate'
 
 // import logo from './logo.svg'
 import './App.css'
@@ -37,6 +38,7 @@ const App = () => (
         <Route exact path="/p" component={Posts} />
         <Route path="/p/:postId" component={PostDetails} />
         <Route path="/u*" component={Users} />
+        <Route path="/estimate" component={Estimate} />
     </div>
 )
 
