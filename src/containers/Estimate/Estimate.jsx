@@ -14,7 +14,6 @@ import EstimateItem from './EstimateItem'
 
 class Estimate extends React.Component {
     state = {
-        etag: 0,
         items: [],
         flatItems: [],
         flatItemsMap: {},
@@ -26,6 +25,7 @@ class Estimate extends React.Component {
 
     componentWillMount () {
         this.loadItems()
+        setInterval(() => this.saveItems(), 1000)
     }
 
     componentDidMount () {
@@ -72,6 +72,12 @@ class Estimate extends React.Component {
                     }
                     break
                 }
+                case '+': {
+                    if (!this.state.isEditMode) {
+                        this.addNewItem()
+                    }
+                    break
+                }
                 default: {
                     console.log(evt.key) // eslint-disable-line
                 } // eslint-disable-line
@@ -84,9 +90,9 @@ class Estimate extends React.Component {
 
     onTreeChange = (items) => {
         this.setState({
-            etag: this.state.etag + 1,
             items,
             flatItems: tree2array(items),
+            flatItemsMap: tree2object(items),
         })
         setTimeout(() => this.saveItems())
     }
@@ -153,12 +159,13 @@ class Estimate extends React.Component {
             },
         })
 
-        setTimeout(() => this.saveItems())
+        // edit item
+        this.selectItem(id)
+        this.setState({ isEditMode: true })
     }
 
     selectItem = (activeItem) => {
         this.setState({ activeItem })
-        this.saveItems()
     }
 
     updateItem = (itemId, details) => {
@@ -168,8 +175,6 @@ class Estimate extends React.Component {
                 [itemId]: details,
             },
         })
-
-        setTimeout(() => this.saveItems())
     }
 
     moveNext = () => {
@@ -208,7 +213,6 @@ class Estimate extends React.Component {
         }
         this.setState({ collapsedItems })
         this.nestable.collapse(collapsedItems)
-        this.saveItems()
     }
 
     toggleStatus = (node) => {
@@ -222,7 +226,6 @@ class Estimate extends React.Component {
                 },
             },
         })
-        this.saveItems()
     }
 
     getEstimate = (nodeId) => {
@@ -240,7 +243,6 @@ class Estimate extends React.Component {
 
     renderItem = ({ item }) => (
         <EstimateItem
-            etag={this.state.etag}
             id={item.id}
             details={this.state.details[item.id]}
             isActive={item.id === this.state.activeItem}
