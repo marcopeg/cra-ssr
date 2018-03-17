@@ -3,19 +3,26 @@
         import/prefer-default-export: off
 *//* global window */
 
-import { createStore as createReduxStore, applyMiddleware, compose } from 'redux'
+import {
+    createStore as createReduxStore,
+    applyMiddleware,
+    compose,
+    combineReducers,
+} from 'redux'
 import thunk from 'redux-thunk'
 
 import { routerMiddleware } from 'react-router-redux'
 
-import { ReduxEvents } from '../lib/redux-events-middleware'
+import { ReduxEvents } from 'lib/redux-events-middleware'
+import createSSRContext from 'lib/ssr'
+
 import { configServices } from '../services'
 import { configListeners } from '../listeners'
 import reducers from '../reducers'
-import { init as initRequest } from '../lib/request'
 
 export const createStore = (history, initialState = {}) => {
     const events = new ReduxEvents()
+    const ssr = createSSRContext()
 
     const enhancers = []
     const middleware = [
@@ -39,16 +46,16 @@ export const createStore = (history, initialState = {}) => {
     )
 
     const store = createReduxStore(
-        reducers,
+        combineReducers({
+            ...reducers,
+            ...ssr.reducers,
+        }),
         initialState,
         composedEnhancers,
     )
 
-    // const connectedHistory = syncHistoryWithStore(history, store)
-
     const isReady = new Promise(async (resolve, reject) => {
         try {
-            await initRequest(store, history)(store.dispatch, store.getState)
             await configListeners(events)
             await configServices(store, history)
             resolve()
@@ -62,5 +69,6 @@ export const createStore = (history, initialState = {}) => {
         history,
         isReady,
         events,
+        ssr,
     }
 }

@@ -7,13 +7,15 @@ import React from 'react'
 import { Route, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
+// Pure components tree
+import Dashboard from 'containers/Dashboard'
+import Posts from 'containers/Posts'
+import PostDetails from 'containers/PostDetails'
+// Side effected tree
+import Users from 'containers/Users'
+
 // import logo from './logo.svg'
 import './App.css'
-
-// console.log(logo)
-
-import Dashboard from '../Dashboard'
-import Post from '../Post'
 
 const App = () => (
     <div className="App">
@@ -26,13 +28,15 @@ const App = () => (
             <div>
                 <Link to="/" style={{ color: '#fff' }}>Home</Link>
                 {' | '}
-                <Link to="/p/1" style={{ color: '#fff' }}>Product1</Link>
+                <Link to="/p" style={{ color: '#fff' }}>Posts</Link>
                 {' | '}
-                <Link to="/p/2" style={{ color: '#fff' }}>Product2</Link>
+                <Link to="/u" style={{ color: '#fff' }}>Users</Link>
             </div>
         </header>
         <Route exact path="/" component={Dashboard} />
-        <Route exact path="/p/:postId*" component={Post} />
+        <Route exact path="/p" component={Posts} />
+        <Route path="/p/:postId" component={PostDetails} />
+        <Route path="/u*" component={Users} />
     </div>
 )
 

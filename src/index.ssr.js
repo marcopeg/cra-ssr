@@ -14,24 +14,34 @@ const renderInitialState = ({
     url,
     store,
     history,
-    events,
     timeout,
 }) => new Promise((resolve) => {
+    const { ssr } = store.getState()
+
     const timer = setTimeout(() => {
         console.error('TIMEOUT', url) // eslint-disable-line
         resolve()
     }, timeout)
 
-    events.registerListener([{
-        type: 'app::is::ready',
-        handler: () => () => {
+    function tick () {
+        renderToString(<Root store={store} history={history} />)
+        if (!ssr.checkStack()) {
             clearTimeout(timer)
             resolve()
-        },
-    }])
+        } else {
+            ssr.once('complete', tick)
+        }
+    }
+
+    
+    // ssr.once('complete', () => {
+    //     clearTimeout(timer)
+    //     resolve()
+    // })
 
     history.push(url)
     renderToString(<Root store={store} history={history} />)
+    ssr.once('complete', tick)
 })
 
 export const staticRender = async (url, initialState = {}, timeout) => {
