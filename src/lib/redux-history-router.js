@@ -15,6 +15,7 @@ const createHistoryRouter = routes => location => (dispatch) => {
                 ...route,
                 match: matchPath(pathname, {
                     path: route.path,
+                    exact: route.exact,
                 }),
             }))
             .filter(route => route.match)

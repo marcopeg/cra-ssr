@@ -4,35 +4,28 @@
 */
 
 import { getJSON } from 'lib/request'
-import { initFetch, setData, setComments } from 'reducers/post-reducer'
-import {
-    initFetch as initPosts,
-    setItems as setPosts,
-} from 'reducers/posts-list-reducer'
+// import { initFetch, setData, } from 'reducers/post-reducer'
+import { setList, setCurrent, setDetails, setComments } from 'reducers/posts-reducer'
 import { fetchUserById } from 'services/users-service'
 
-export const fetchPosts = () => async (dispatch, getState) => {
-    const { ssr, postsList } = getState()
-
-    // check local cache to avoid to reload posts
-    if (postsList.items !== null) {
-        return postsList.items
-    }
-
-    // get fresh posts
-    dispatch(initPosts())
+export const fetchPostsList = () => async (dispatch, getState) => {
+    const { ssr } = getState()
     const items = await ssr.await(getJSON('https://jsonplaceholder.typicode.com/posts'))
-    dispatch(setPosts(items))
-
+    console.log(items)
     return items
 }
 
 export const fetchPostById = postId => async (dispatch, getState) => {
-    const { ssr } = getState()
+    const { ssr, posts } = getState()
 
-    dispatch(initFetch(postId))
+    // cache data
+    if (posts.details[postId]) {
+        return posts.details[postId]
+    }
+
     const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/posts/${postId}`))
-    dispatch(setData(data))
+    dispatch(setDetails(postId, data))
+    console.log('setDetails')
 
     return data
 }
@@ -43,24 +36,39 @@ export const fetchPostsByUserId = userId => async (dispatch, getState) => {
     return data
 }
 
-export const fetchCurrentPostAuthor = () => async (dispatch, getState) => {
-    const { post, user } = getState()
-    const { userId } = post.data || {}
+export const loadInitialPosts = () => async (dispatch, getState) => {
+    const { posts } = getState()
 
-    if (user.id !== userId || user.data === null) {
-        return dispatch(fetchUserById(userId))
+    // cache result
+    if (posts.list) {
+        return posts.list
     }
 
-    return user.data
+    const items = await dispatch(fetchPostsList())
+    dispatch(setList(items))
+
+    return items
 }
 
-export const fetchCurrentPostComments = () => async (dispatch, getState) => {
-    const { ssr, post } = getState()
+export const loadCurrentPost = postId => async (dispatch) => {
+    await dispatch(setCurrent(postId))
+    const post = await dispatch(fetchPostById(postId))
+    return post
+}
 
-    if (post.comments !== null) {
-        return
+export const loadPostAuthor = post => async dispatch =>
+    dispatch(fetchUserById(post.userId))
+
+export const loadPostComments = post => async (dispatch, getState) => {
+    const { ssr, posts } = getState()
+
+    // cache local data
+    if (posts.comments[post.id]) {
+        return posts.comments[post.id]
     }
 
-    const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/comments?postId=${post.id}`))
-    dispatch(setComments(data))
+    const items = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/comments?postId=${post.id}`))
+    dispatch(setComments(post.id, items))
+
+    return items
 }

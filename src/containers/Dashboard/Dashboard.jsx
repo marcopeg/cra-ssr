@@ -8,7 +8,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchPosts } from 'services/posts-service'
+// import { fetchPosts } from 'services/posts-service'
 
 const state2props = ({ app, postsList }) => ({
     title: app.name,
@@ -16,7 +16,7 @@ const state2props = ({ app, postsList }) => ({
 })
 
 const dispatch2props = {
-    fetchPosts,
+    // fetchPosts,
 }
 
 class Dashboard extends React.Component {
@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
     title: PropTypes.string.isRequired,
-    fetchPosts: PropTypes.func.isRequired,
+    // fetchPosts: PropTypes.func.isRequired,
     posts: PropTypes.array, // eslint-disable-line
 }
 
