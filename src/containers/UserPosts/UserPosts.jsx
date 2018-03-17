@@ -35,7 +35,7 @@ class UserPosts extends React.Component {
             <div>
                 <h1>User Posts</h1>
                 {this.props.items.map(post => (
-                    <li>
+                    <li key={post.id}>
                         <Link to={`/p/${post.id}`}>{post.title}</Link>
                     </li>
                 ))}
