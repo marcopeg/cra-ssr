@@ -8,10 +8,18 @@ import PropTypes from 'prop-types'
 
 import InputWithFocus from './InputWithFocus'
 
+const styles = {
+    normal: {},
+    active: {
+        background: '#b2e5ff',
+    },
+}
+
 class EstimateItem extends React.Component {
     static propTypes = {
         id: PropTypes.number.isRequired,
         isActive: PropTypes.bool.isRequired,
+        isEditable: PropTypes.bool.isRequired,
         details: PropTypes.shape({
             description: PropTypes.string.isRequired,
         }).isRequired,
@@ -42,20 +50,28 @@ class EstimateItem extends React.Component {
     }
 
     render () {
-        if (this.props.isActive) {
-            return (
+        const content = this.props.isActive && this.props.isEditable
+            ? (
                 <div>
                     <InputWithFocus
                         value={this.state.details.description}
                         onChange={this.updateDescription}
-                        onCancel={() => {}}
+                        onCancel={() => { }}
                     />
                 </div>
             )
-        }
+            : (
+                <div>
+                    {this.props.details.description}
+                </div>
+            )
+        
         return (
-            <div onClick={this.getFocus}>
-                {this.props.details.description}
+            <div
+                onClick={this.getFocus}
+                style={this.props.isActive ? styles.active : null}
+            >
+                {content}
             </div>
         )
     }
