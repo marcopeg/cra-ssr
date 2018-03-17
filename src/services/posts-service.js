@@ -10,9 +10,7 @@ import { fetchUserById } from 'services/users-service'
 
 export const fetchPostsList = () => async (dispatch, getState) => {
     const { ssr } = getState()
-    const items = await ssr.await(getJSON('https://jsonplaceholder.typicode.com/posts'))
-    console.log(items)
-    return items
+    return ssr.await(getJSON('https://jsonplaceholder.typicode.com/posts'))
 }
 
 export const fetchPostById = postId => async (dispatch, getState) => {
@@ -25,15 +23,13 @@ export const fetchPostById = postId => async (dispatch, getState) => {
 
     const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/posts/${postId}`))
     dispatch(setDetails(postId, data))
-    console.log('setDetails')
 
     return data
 }
 
 export const fetchPostsByUserId = userId => async (dispatch, getState) => {
     const { ssr } = getState()
-    const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/posts/?userId=${userId}`))
-    return data
+    return ssr.await(getJSON(`https://jsonplaceholder.typicode.com/posts/?userId=${userId}`))
 }
 
 export const loadInitialPosts = () => async (dispatch, getState) => {

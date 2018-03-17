@@ -52,7 +52,7 @@ const createContext = () => {
         on: (action, fn) => subscribe(action, fn, false),
         once: (action, fn) => subscribe(action, fn, true),
         await: (p) => {
-            console.log('push in stack')
+            // console.log('push in stack')
             awaitStack.push(p)
 
             p.then(() => {
