@@ -37,6 +37,12 @@ export const fetchPostById = postId => async (dispatch, getState) => {
     return data
 }
 
+export const fetchPostsByUserId = userId => async (dispatch, getState) => {
+    const { ssr } = getState()
+    const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/posts/?userId=${userId}`))
+    return data
+}
+
 export const fetchCurrentPostAuthor = () => async (dispatch, getState) => {
     const { post, user } = getState()
     const { userId } = post.data || {}

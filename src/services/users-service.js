@@ -4,8 +4,14 @@
 */
 
 import { getJSON } from 'lib/request'
-// import { initFetch, setData } from 'reducers/user-reducer'
-import { setList, setItem, setCurrent } from 'reducers/users-reducer'
+import { fetchPostsByUserId } from 'services/posts-service'
+
+import {
+    setList,
+    setDetails,
+    setPosts,
+    setCurrent,
+} from 'reducers/users-reducer'
 
 export const fetchUsers = () => async (dispatch, getState) => {
     const { ssr, users } = getState()
@@ -30,10 +36,8 @@ export const fetchUserById = userId => async (dispatch, getState) => {
         return users.details[userId]
     }
 
-    // dispatch(initFetch(userId))
     const data = await ssr.await(getJSON(`https://jsonplaceholder.typicode.com/users/${userId}`))
-    // dispatch(setData(data))
-    dispatch(setItem(userId, data))
+    dispatch(setDetails(userId, data))
 
     return data
 }
@@ -41,4 +45,17 @@ export const fetchUserById = userId => async (dispatch, getState) => {
 export const fetchCurrentUser = userId => async (dispatch) => {
     dispatch(setCurrent(userId))
     dispatch(fetchUserById(userId))
+}
+
+export const fetchUserPosts = userId => async (dispatch, getState) => {
+    const { users } = getState()
+
+    // cache result
+    if (users.posts[userId]) {
+        return users.posts[userId]
+    }
+    const posts = await dispatch(fetchPostsByUserId(userId))
+    dispatch(setPosts(userId, posts))
+
+    return posts
 }

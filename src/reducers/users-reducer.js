@@ -2,7 +2,10 @@
 export const initialState = {
     list: null,
     details: {
-        // [id]: { ...user-details }
+        // [userId]: { ...user-details }
+    },
+    posts: {
+        // [userId]: [ ...user-posts ]
     },
     current: null,
 }
@@ -12,7 +15,8 @@ export const initialState = {
  */
 
 export const SET_LIST = 'setList@user'
-export const SET_ITEM = 'setItem@user'
+export const SET_DETAILS = 'setDetails@user'
+export const SET_POSTS = 'setPosts@user'
 export const SET_CURRENT = 'setCurrent@user'
 
 export const setList = items => ({
@@ -20,9 +24,14 @@ export const setList = items => ({
     payload: items,
 })
 
-export const setItem = (id, data) => ({
-    type: SET_ITEM,
+export const setDetails = (id, data) => ({
+    type: SET_DETAILS,
     payload: { id, data },
+})
+
+export const setPosts = (id, items) => ({
+    type: SET_POSTS,
+    payload: { id, items },
 })
 
 export const setCurrent = id => ({
@@ -39,11 +48,18 @@ export const actionHandlers = {
         ...state,
         list: action.payload,
     }),
-    [SET_ITEM]: (state, action) => ({
+    [SET_DETAILS]: (state, action) => ({
         ...state,
         details: {
             ...state.details,
             [action.payload.id]: action.payload.data,
+        },
+    }),
+    [SET_POSTS]: (state, action) => ({
+        ...state,
+        posts: {
+            ...state.posts,
+            [action.payload.id]: action.payload.items,
         },
     }),
     [SET_CURRENT]: (state, action) => ({

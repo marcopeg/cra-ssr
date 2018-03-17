@@ -9,6 +9,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchCurrentUser } from 'services/users-service'
 
+import UserPosts from 'containers/UserPosts'
+
 const state2props = ({ users }, { userId }) => ({
     id: userId,
     data: users.current !== null
@@ -35,6 +37,8 @@ class UserDetails extends React.Component {
                 <h1>User Details</h1>
                 <p>{this.props.data.name}</p>
                 <code>{this.props.data.email}</code>
+                <hr />
+                <UserPosts userId={this.props.id} />
             </div>
         )
     }

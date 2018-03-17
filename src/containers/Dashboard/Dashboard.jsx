@@ -22,7 +22,7 @@ const dispatch2props = {
 class Dashboard extends React.Component {
     componentWillMount () {
         console.log('component did mount')
-        this.props.fetchPosts()
+        // this.props.fetchPosts()
     }
 
     render () {

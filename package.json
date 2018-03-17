@@ -5,8 +5,8 @@
     "scripts": {
         "start": "react-app-rewired start",
         "start:dev": "yarn && react-app-rewired start",
-        "ssr:dev": "NODE_ENV=development SSR=true nodemon ssr",
-        "ssr:prod": "yarn && yarn build && NODE_ENV=production SSR=true node ssr",
+        "start:ssr": "yarn && yarn build && NODE_ENV=production SSR=true node ssr",
+        "start:ssr:dev": "NODE_ENV=development SSR=true nodemon -e js,jsx ssr",
         "build": "react-app-rewired build",
         "test": "react-app-rewired test --env=jsdom",
         "eject": "react-app-rewired eject",
