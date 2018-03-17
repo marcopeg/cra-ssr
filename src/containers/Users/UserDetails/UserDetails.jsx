@@ -7,7 +7,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchCurrentUser } from 'services/users-service'
+import { loadCurrentUser } from 'services/users-service'
 
 import UserPosts from './UserPosts'
 
@@ -19,12 +19,12 @@ const state2props = ({ users }, { userId }) => ({
 })
 
 const dispatch2props = {
-    fetchCurrentUser,
+    loadCurrentUser,
 }
 
 class UserDetails extends React.Component {
     componentWillMount () {
-        this.props.fetchCurrentUser(this.props.id)
+        this.props.loadCurrentUser(this.props.id)
     }
 
     render () {
@@ -51,7 +51,7 @@ UserDetails.propTypes = {
         name: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
     }),
-    fetchCurrentUser: PropTypes.func.isRequired,
+    loadCurrentUser: PropTypes.func.isRequired,
 }
 
 UserDetails.defaultProps = {

@@ -7,7 +7,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchUserPosts } from 'services/users-service'
+import { loadUserPosts } from 'services/users-service'
 import { Link } from 'react-router-dom'
 
 const state2props = ({ users }, { userId }) => ({
@@ -18,12 +18,12 @@ const state2props = ({ users }, { userId }) => ({
 })
 
 const dispatch2props = {
-    fetchUserPosts,
+    loadUserPosts,
 }
 
 class UserPosts extends React.Component {
     componentWillMount () {
-        this.props.fetchUserPosts(this.props.userId)
+        this.props.loadUserPosts(this.props.userId)
     }
 
     render () {
@@ -50,7 +50,7 @@ UserPosts.propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
     })),
-    fetchUserPosts: PropTypes.func.isRequired,
+    loadUserPosts: PropTypes.func.isRequired,
 }
 
 UserPosts.defaultProps = {

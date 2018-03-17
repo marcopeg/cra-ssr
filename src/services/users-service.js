@@ -42,12 +42,12 @@ export const fetchUserById = userId => async (dispatch, getState) => {
     return data
 }
 
-export const fetchCurrentUser = userId => async (dispatch) => {
+export const loadCurrentUser = userId => async (dispatch) => {
     dispatch(setCurrent(userId))
     dispatch(fetchUserById(userId))
 }
 
-export const fetchUserPosts = userId => async (dispatch, getState) => {
+export const loadUserPosts = userId => async (dispatch, getState) => {
     const { users } = getState()
 
     // cache result
