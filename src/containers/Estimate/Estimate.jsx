@@ -8,11 +8,15 @@ import React from 'react'
 import Nestable from 'react-nestable'
 
 import tree2array from './tree2array'
+import tree2object from './tree2object'
 import EstimateItem from './EstimateItem'
 
 class Estimate extends React.Component {
     state = {
         items: [],
+        flatItems: [],
+        flatItemsMap: {},
+        collapsedItems: [],
         details: {},
         activeItem: null,
         isEditMode: false,
@@ -55,11 +59,25 @@ class Estimate extends React.Component {
                     }
                     break
                 }
+                case ' ': {
+                    if (!this.state.isEditMode && this.state.activeItem) {
+                        const node = this.state.flatItemsMap[this.state.activeItem]
+                        if (node.item.children.length) {
+                            this.toggleCollapse(node)
+                        } else {
+                            this.toggleStatus(node)
+                        }
+                    }
+                    break
+                }
                 default: {
-                    console.log(evt.key)
+                    console.log(evt.key) // eslint-disable-line
                 } // eslint-disable-line
             }
         }, false)
+
+        // init collapsed documents
+        setTimeout(() => this.nestable.collapse(this.state.collapsedItems))
     }
 
     onTreeChange = (items) => {
@@ -71,19 +89,39 @@ class Estimate extends React.Component {
     }
 
     saveItems = () => {
-        localStorage.setItem('estimate-items', JSON.stringify(this.state.items))
-        localStorage.setItem('estimate-details', JSON.stringify(this.state.details))
+        const {
+            items,
+            details,
+            activeItem,
+            collapsedItems,
+        } = this.state
+
+        localStorage.setItem('estimate-doc', JSON.stringify({
+            items,
+            details,
+            activeItem,
+            collapsedItems,
+        }))
     }
 
     loadItems = () => {
         try {
-            const items = JSON.parse(localStorage.getItem('estimate-items'))
-            const details = JSON.parse(localStorage.getItem('estimate-details'))
-            if (items && details) {
+            const doc = JSON.parse(localStorage.getItem('estimate-doc'))
+            if (doc) {
+                const {
+                    items,
+                    details,
+                    activeItem,
+                    collapsedItems,
+                } = doc
+
                 this.setState({
                     items,
                     flatItems: tree2array(items),
+                    flatItemsMap: tree2object(items),
                     details,
+                    activeItem,
+                    collapsedItems,
                 })
             }
         } catch (err) {
@@ -101,6 +139,7 @@ class Estimate extends React.Component {
         this.setState({
             items,
             flatItems: tree2array(items),
+            flatItemsMap: tree2object(items),
             details: {
                 ...this.state.details,
                 [id]: {
@@ -112,8 +151,10 @@ class Estimate extends React.Component {
         setTimeout(() => this.saveItems())
     }
 
-    selectItem = activeItem =>
+    selectItem = (activeItem) => {
         this.setState({ activeItem })
+        this.saveItems()
+    }
 
     updateItem = (itemId, details) => {
         this.setState({
@@ -144,6 +185,23 @@ class Estimate extends React.Component {
         }
     }
 
+    toggleCollapse = (node) => {
+        const collapsedItems = [ ...this.state.collapsedItems ]
+        const index = this.state.collapsedItems.indexOf(node.id)
+        if (index === -1) {
+            collapsedItems.push(node.id)
+        } else {
+            collapsedItems.splice(index, 1)
+        }
+        this.setState({ collapsedItems })
+        this.nestable.collapse(collapsedItems)
+        this.saveItems()
+    }
+
+    toggleStatus = (node) => {
+        console.log('toggle status ', node)
+    }
+
     renderItem = ({ item }) => (
         <EstimateItem
             id={item.id}
@@ -161,6 +219,7 @@ class Estimate extends React.Component {
             <div style={{ textAlign: 'left', margin: 20 }}>
                 <h1>Estimate Tool</h1>
                 <Nestable
+                    ref={(nestable) => { this.nestable = nestable }}
                     items={items}
                     renderItem={this.renderItem}
                     onChange={this.onTreeChange}

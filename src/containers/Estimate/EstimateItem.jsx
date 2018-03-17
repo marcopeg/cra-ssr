@@ -9,7 +9,9 @@ import PropTypes from 'prop-types'
 import InputWithFocus from './InputWithFocus'
 
 const styles = {
-    normal: {},
+    normal: {
+        borderBottom: '1px dotted #ddd',
+    },
     active: {
         background: '#b2e5ff',
     },
@@ -62,6 +64,7 @@ class EstimateItem extends React.Component {
             )
             : (
                 <div>
+                    <span style={{ float: 'right' }}>22m</span>
                     {this.props.details.description}
                 </div>
             )
@@ -69,7 +72,7 @@ class EstimateItem extends React.Component {
         return (
             <div
                 onClick={this.getFocus}
-                style={this.props.isActive ? styles.active : null}
+                style={this.props.isActive ? styles.active : styles.normal}
             >
                 {content}
             </div>
