@@ -2,6 +2,7 @@
     eslint
         react/prefer-stateless-function: off,
         no-unused-expressions: off,
+        react/sort-comp: off,
 *//* global localStorage document */
 
 import React from 'react'
@@ -13,6 +14,7 @@ import EstimateItem from './EstimateItem'
 
 class Estimate extends React.Component {
     state = {
+        etag: 0,
         items: [],
         flatItems: [],
         flatItemsMap: {},
@@ -62,7 +64,7 @@ class Estimate extends React.Component {
                 case ' ': {
                     if (!this.state.isEditMode && this.state.activeItem) {
                         const node = this.state.flatItemsMap[this.state.activeItem]
-                        if (node.item.children.length) {
+                        if (this.hasChildren(this.state.activeItem)) {
                             this.toggleCollapse(node)
                         } else {
                             this.toggleStatus(node)
@@ -82,6 +84,7 @@ class Estimate extends React.Component {
 
     onTreeChange = (items) => {
         this.setState({
+            etag: this.state.etag + 1,
             items,
             flatItems: tree2array(items),
         })
@@ -143,7 +146,9 @@ class Estimate extends React.Component {
             details: {
                 ...this.state.details,
                 [id]: {
+                    status: false,
                     description: 'new item',
+                    estimate: 0,
                 },
             },
         })
@@ -185,6 +190,14 @@ class Estimate extends React.Component {
         }
     }
 
+    hasChildren = (nodeId) => {
+        const node = this.state.flatItemsMap[nodeId]
+        if (!node.item.children) {
+            return false
+        }
+        return node.item.children.length > 0
+    }
+
     toggleCollapse = (node) => {
         const collapsedItems = [ ...this.state.collapsedItems ]
         const index = this.state.collapsedItems.indexOf(node.id)
@@ -199,15 +212,42 @@ class Estimate extends React.Component {
     }
 
     toggleStatus = (node) => {
-        console.log('toggle status ', node)
+        const details = this.state.details[node.id]
+        this.setState({
+            details: {
+                ...this.state.details,
+                [node.id]: {
+                    ...details,
+                    status: details.status ? false : true, // eslint-disable-line
+                },
+            },
+        })
+        this.saveItems()
+    }
+
+    getEstimate = (nodeId) => {
+        if (this.hasChildren(nodeId)) {
+            return this.state.flatItemsMap[nodeId].item.children
+                .reduce((acc, children) => acc + this.getEstimate(children.id), 0)
+        }
+
+        if (this.state.details[nodeId].status) {
+            return 0
+        }
+
+        return parseInt(this.state.details[nodeId].estimate, 10) || 0
     }
 
     renderItem = ({ item }) => (
         <EstimateItem
+            etag={this.state.etag}
             id={item.id}
             details={this.state.details[item.id]}
             isActive={item.id === this.state.activeItem}
             isEditable={this.state.isEditMode}
+            isLeafNode={!this.hasChildren(item.id)}
+            estimate={this.getEstimate(item.id)}
+            isCollapsed={this.state.collapsedItems.indexOf(item.id) !== -1}
             onFocus={this.selectItem}
             onChange={this.updateItem}
         />

@@ -22,11 +22,22 @@ class EstimateItem extends React.Component {
         id: PropTypes.number.isRequired,
         isActive: PropTypes.bool.isRequired,
         isEditable: PropTypes.bool.isRequired,
+        isLeafNode: PropTypes.bool.isRequired,
         details: PropTypes.shape({
             description: PropTypes.string.isRequired,
+            status: PropTypes.bool.isRequired,
+            estimate: PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string,
+            ]),
         }).isRequired,
+        estimate: PropTypes.number,
         onFocus: PropTypes.func.isRequired,
         onChange: PropTypes.func.isRequired,
+    }
+
+    static defaultValues = {
+        estimate: null,
     }
 
     state = {
@@ -51,7 +62,21 @@ class EstimateItem extends React.Component {
         setTimeout(this.emitOnChange)
     }
 
+    updateEstimate = (evt) => {
+        this.setState({
+            details: {
+                ...this.state.details,
+                estimate: evt.target.value,
+            },
+        })
+        setTimeout(this.emitOnChange)
+    }
+
     render () {
+        const status = this.props.details.status
+            ? '[x] '
+            : '[] '
+
         const content = this.props.isActive && this.props.isEditable
             ? (
                 <div>
@@ -60,11 +85,21 @@ class EstimateItem extends React.Component {
                         onChange={this.updateDescription}
                         onCancel={() => { }}
                     />
+                    <input
+                        value={this.state.details.estimate}
+                        onChange={this.updateEstimate}
+                        style={{ float: 'right' }}
+                    />
                 </div>
             )
             : (
                 <div>
-                    <span style={{ float: 'right' }}>22m</span>
+                    {this.props.isLeafNode ? (
+                        <span style={{ float: 'right' }}>{this.props.estimate}</span>
+                    ) : (
+                        <span style={{ float: 'right', background: '#ddd' }}>{this.props.estimate}</span>
+                    )}
+                    {this.props.isLeafNode ? status : null}
                     {this.props.details.description}
                 </div>
             )
