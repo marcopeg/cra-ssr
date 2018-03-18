@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 
 class InputWithFocus extends React.Component {
     static propTypes = {
+        type: PropTypes.string,
         value: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number,
@@ -16,6 +17,7 @@ class InputWithFocus extends React.Component {
     }
 
     static defaultProps = {
+        type: 'text',
         value: '',
         hasFocus: false,
     }
@@ -52,7 +54,6 @@ class InputWithFocus extends React.Component {
             <input
                 {...props}
                 ref={(input) => { this.input = input }}
-                type="text"
             />
         )
     }

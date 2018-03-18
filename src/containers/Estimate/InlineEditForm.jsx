@@ -8,6 +8,29 @@ import PropTypes from 'prop-types'
 
 import InputWithFocus from './InputWithFocus'
 
+const styles = {}
+styles.input = {
+    fontFamily: 'verdana',
+    fontSize: '11pt',
+    background: '#fff',
+    border: '1px solid transparent',
+    outline: 'none',
+}
+styles.wrapper = {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'space-between',
+}
+styles.description = {
+    ...styles.input,
+    flex: 1,
+}
+styles.estimate = {
+    ...styles.input,
+    width: 50,
+    textAlign: 'right',
+}
+
 class InlineEditForm extends React.Component {
     static propTypes = {
         id: PropTypes.number.isRequired,
@@ -59,18 +82,19 @@ class InlineEditForm extends React.Component {
 
     render () {
         return (
-            <div>
+            <div style={styles.wrapper}>
                 <InputWithFocus
                     hasFocus={this.props.focusOn === 'description'}
                     value={this.state.details.description}
                     onChange={this.updateDescription}
                     onCancel={() => { }}
+                    style={styles.description}
                 />
                 <InputWithFocus
                     hasFocus={this.props.focusOn === 'estimate'}
                     value={this.state.details.estimate}
                     onChange={this.updateEstimate}
-                    style={{ float: 'right' }}
+                    style={styles.estimate}
                 />
             </div>
         )
