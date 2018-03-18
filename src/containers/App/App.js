@@ -32,6 +32,8 @@ const App = () => (
                 <Link to="/p" style={{ color: '#fff' }}>Posts</Link>
                 {' | '}
                 <Link to="/u" style={{ color: '#fff' }}>Users</Link>
+                {' | '}
+                <Link to="/estimate" style={{ color: '#fff' }}>Estimate</Link>
             </div>
         </header>
         <Route exact path="/" component={Dashboard} />
