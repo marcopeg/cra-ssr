@@ -21,6 +21,18 @@ styles.basics = {
     margin: 20,
     fontFamily: 'verdana',
 }
+styles.welcome = {
+    border: '1px solid #47bde8',
+    background: '#afe4ff',
+    borderRadius: 4,
+    marginTop: 20,
+    marginBottom: 20,
+    padding: 20,
+}
+styles.shortcuts = {
+    background: '#ddd',
+    padding: 20,
+}
 
 class Estimate extends React.Component {
     state = {
@@ -361,6 +373,12 @@ class Estimate extends React.Component {
         return (
             <div style={styles.basics}>
                 <h1>Estimate Tool</h1>
+                {items.length ? null : (
+                    <div style={styles.welcome}>
+                        <p>Welcome to a new experience in discovering your requirements!</p>
+                        <p>Click "Add Item" (or just type "a") to add your first requirement.</p>
+                    </div>
+                )}
                 <Nestable
                     ref={(nestable) => { this.nestable = nestable }}
                     items={items}
@@ -371,6 +389,18 @@ class Estimate extends React.Component {
                 <button onClick={this.addNewItem}>+ Add Item</button>
                 <button onClick={() => saveToDisk(this)}>Save Project</button>
                 <button onClick={() => loadFromDisk(this)}>Open Project</button>
+                <hr />
+                <div>
+                    <h3>Keyboard Shortcuts:</h3>
+                    <pre style={styles.shortcuts}>
+                        "a", "+", "alt + Enter" -> Add new requirement<br />
+                        "Enter" -> activate / deactivate edit mode<br />
+                        "e" -> enter editing mode and focus on the estimate field<br />
+                        "Space" -> collapse sections or mark a requirement as done<br />
+                        "s" -> save project to disk<br />
+                        "o" -> open a saved project<br />
+                    </pre>
+                </div>
             </div>
         )
     }
