@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { hydrate } from 'react-dom'
-import createHistory from 'history/createBrowserHistory'
+import createHistory from 'history/createHashHistory'
 import { createStore } from './boot/store'
 import Root from './boot/Root'
 import './index.css'
