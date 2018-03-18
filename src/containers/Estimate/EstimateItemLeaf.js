@@ -8,15 +8,6 @@ import PropTypes from 'prop-types'
 
 import InputWithFocus from './InputWithFocus'
 
-const styles = {
-    normal: {
-        borderBottom: '1px dotted #ddd',
-    },
-    active: {
-        background: '#b2e5ff',
-    },
-}
-
 class EstimateItemLeaf extends React.Component {
     static propTypes = {
         id: PropTypes.number.isRequired,
@@ -32,7 +23,6 @@ class EstimateItemLeaf extends React.Component {
         }).isRequired,
         focusOn: PropTypes.string,
         estimate: PropTypes.number,
-        onFocus: PropTypes.func.isRequired,
         onChange: PropTypes.func.isRequired,
     }
 
@@ -46,8 +36,6 @@ class EstimateItemLeaf extends React.Component {
             ...this.props.details,
         },
     }
-
-    getFocus = () => this.props.onFocus(this.props.id)
 
     emitOnChange = () => {
         this.props.onChange(this.props.id, this.state.details)
@@ -102,15 +90,8 @@ class EstimateItemLeaf extends React.Component {
                     {this.props.details.description}
                 </div>
             )
-
-        return (
-            <div
-                onClick={this.getFocus}
-                style={this.props.isActive ? styles.active : styles.normal}
-            >
-                {content}
-            </div>
-        )
+        
+        return content
     }
 }
 
