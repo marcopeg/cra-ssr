@@ -6,7 +6,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import InputWithFocus from './InputWithFocus'
+import InlineEditForm from './InlineEditForm'
 import minutes from './minutes'
 
 class EstimateItemLeaf extends React.Component {
@@ -22,44 +22,11 @@ class EstimateItemLeaf extends React.Component {
                 PropTypes.string,
             ]),
         }).isRequired,
-        focusOn: PropTypes.string,
         estimate: PropTypes.number,
-        onChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
         estimate: null,
-        focusOn: 'description',
-    }
-
-    state = {
-        details: {
-            ...this.props.details,
-        },
-    }
-
-    emitOnChange = () => {
-        this.props.onChange(this.props.id, this.state.details)
-    }
-
-    updateDescription = (evt) => {
-        this.setState({
-            details: {
-                ...this.state.details,
-                description: evt.target.value,
-            },
-        })
-        setTimeout(this.emitOnChange)
-    }
-
-    updateEstimate = (evt) => {
-        this.setState({
-            details: {
-                ...this.state.details,
-                estimate: evt.target.value,
-            },
-        })
-        setTimeout(this.emitOnChange)
     }
 
     render () {
@@ -68,22 +35,7 @@ class EstimateItemLeaf extends React.Component {
             : '[] '
 
         const content = this.props.isActive && this.props.isEditable
-            ? (
-                <div>
-                    <InputWithFocus
-                        hasFocus={this.props.focusOn === 'description'}
-                        value={this.state.details.description}
-                        onChange={this.updateDescription}
-                        onCancel={() => { }}
-                    />
-                    <InputWithFocus
-                        hasFocus={this.props.focusOn === 'estimate'}
-                        value={this.state.details.estimate}
-                        onChange={this.updateEstimate}
-                        style={{ float: 'right' }}
-                    />
-                </div>
-            )
+            ? <InlineEditForm {...this.props} />
             : (
                 <div>
                     <span style={{ float: 'right' }}>{minutes(this.props.estimate)}</span>
@@ -91,7 +43,6 @@ class EstimateItemLeaf extends React.Component {
                     {this.props.details.description}
                 </div>
             )
-        
         return content
     }
 }
