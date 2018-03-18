@@ -80,7 +80,7 @@ class Estimate extends React.Component {
                     }
                     break
                 }
-                case '-': {
+                case 'Backspace': {
                     if (!this.state.isEditMode) {
                         this.deleteItem()
                     }
@@ -188,32 +188,37 @@ class Estimate extends React.Component {
     }
 
     deleteItem = () => {
-        // const {
-        //     details,
-        //     flatItemsMap,
-        //     activeItem,
-        //     collapsedItems,
-        // } = this.state
+        // eslint-disable-next-line
+        if (!confirm('remove it all?')) {
+            return
+        }
 
-        // const node = flatItemsMap[activeItem]
-        // const subtree = tree2array(node.item.children)
+        const {
+            details,
+            flatItemsMap,
+            activeItem,
+            collapsedItems,
+        } = this.state
 
-        // // remove from tree
-        // const items = treeDeleteNode(this.state.items, this.state.activeItem)
-        // delete details[node.id]
+        const node = flatItemsMap[activeItem]
+        const subtree = tree2array(node.item.children)
 
-        // for (const nodeId of subtree) {
-        //     delete details[nodeId]
-        //     const idx = collapsedItems.indexOf(nodeId)
-        //     if (idx !== -1) {
-        //         collapsedItems.splice(idx, 1)
-        //     }
-        // }
+        // remove from tree
+        const items = treeDeleteNode(this.state.items, this.state.activeItem)
+        delete details[node.id]
 
-        // this.updateStateWithItems(items, {
-        //     details,
-        //     collapsedItems,
-        // })
+        for (const nodeId of subtree) {
+            delete details[nodeId]
+            const idx = collapsedItems.indexOf(nodeId)
+            if (idx !== -1) {
+                collapsedItems.splice(idx, 1)
+            }
+        }
+
+        this.updateStateWithItems(items, {
+            details,
+            collapsedItems,
+        })
     }
 
     hasChildren = (nodeId) => {

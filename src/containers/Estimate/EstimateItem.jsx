@@ -81,11 +81,12 @@ class EstimateItem extends React.Component {
             ? (
                 <div>
                     <InputWithFocus
+                        hasFocus
                         value={this.state.details.description}
                         onChange={this.updateDescription}
                         onCancel={() => { }}
                     />
-                    <input
+                    <InputWithFocus
                         value={this.state.details.estimate}
                         onChange={this.updateEstimate}
                         style={{ float: 'right' }}

@@ -8,21 +8,23 @@ import PropTypes from 'prop-types'
 
 class InputWithFocus extends React.Component {
     static propTypes = {
-        value: PropTypes.string,
+        value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+        ]),
+        hasFocus: PropTypes.bool,
     }
 
     static defaultProps = {
         value: '',
+        hasFocus: false,
     }
 
     componentDidMount () {
-        this.input.focus()
-        setTimeout(() => {
-            this.input.value = `${this.props.value} `
-            setTimeout(() => {
-                this.input.value = this.props.value
-            })
-        })
+        if (this.props.hasFocus) {
+            this.input.focus()
+            this.input.select()
+        }
     }
 
     // updateValue = evt =>
@@ -45,9 +47,10 @@ class InputWithFocus extends React.Component {
     // }
 
     render () {
+        const { hasFocus, ...props } = this.props
         return (
             <input
-                {...this.props}
+                {...props}
                 ref={(input) => { this.input = input }}
                 type="text"
             />
