@@ -4,7 +4,7 @@
         no-unused-expressions: off,
         react/sort-comp: off,
         no-restricted-syntax: off,
-*/
+*//* global document */
 
 import React from 'react'
 import Nestable from 'react-nestable'
@@ -36,7 +36,6 @@ class Estimate extends React.Component {
 
     componentWillMount () {
         setTimeout(() => loadFromBrowser(this))
-        // setTimeout(this.loadItems)
         setInterval(() => saveToBrowser(this), 1000)
     }
 
@@ -54,15 +53,19 @@ class Estimate extends React.Component {
                     break
                 }
                 case 'Enter': {
-                    if (this.state.isEditMode === false && this.state.activeItem !== null) {
+                    if (evt.altKey || evt.ctrlKey) {
+                        this.addNewItem()
+                    } else if (this.state.isEditMode === false && this.state.activeItem !== null) {
                         this.setState({
                             isEditMode: true,
                             focusOn: 'description',
                         })
-                    } else {
+                    } else if (this.state.isEditMode === true) {
                         this.setState({
                             isEditMode: false,
                         })
+                    } else {
+                        this.addNewItem()
                     }
                     break
                 }
@@ -77,8 +80,9 @@ class Estimate extends React.Component {
                 }
                 case 'Escape': {
                     if (this.state.isEditMode) {
-                        console.log('should discard changes')
                         this.setState({ isEditMode: false })
+                    } else if (this.state.activeItem !== null) {
+                        this.selectItem(null)
                     }
                     break
                 }
@@ -93,7 +97,8 @@ class Estimate extends React.Component {
                     }
                     break
                 }
-                case '+': {
+                case '+':
+                case 'a': {
                     if (!this.state.isEditMode) {
                         this.addNewItem()
                     }
@@ -363,7 +368,9 @@ class Estimate extends React.Component {
                     onChange={this.updateStateWithItems}
                 />
                 <hr />
-                <button onClick={this.addNewItem}>Add Item</button>
+                <button onClick={this.addNewItem}>+ Add Item</button>
+                <button onClick={() => saveToDisk(this)}>Save Project</button>
+                <button onClick={() => loadFromDisk(this)}>Open Project</button>
             </div>
         )
     }
