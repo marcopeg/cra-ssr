@@ -16,6 +16,13 @@ import downloadJson from './download-json'
 import uploadJson from './upload-json'
 import EstimateItem from './EstimateItem'
 
+const styles = {}
+styles.basics = {
+    textAlign: 'left',
+    margin: 20,
+    fontFamily: 'verdana',
+}
+
 class Estimate extends React.Component {
     state = {
         items: [],
@@ -37,17 +44,13 @@ class Estimate extends React.Component {
         document.addEventListener('keyup', (evt) => {
             switch (evt.key) {
                 case 'ArrowUp': {
-                    if (this.state.isEditMode === false) {
-                        this.movePrev()
-                        evt.preventDefault()
-                    }
+                    this.movePrev()
+                    evt.preventDefault()
                     break
                 }
                 case 'ArrowDown': {
-                    if (this.state.isEditMode === false) {
-                        this.moveNext()
-                        evt.preventDefault()
-                    }
+                    this.moveNext()
+                    evt.preventDefault()
                     break
                 }
                 case 'Enter': {
@@ -57,7 +60,9 @@ class Estimate extends React.Component {
                             focusOn: 'description',
                         })
                     } else {
-                        this.moveNext()
+                        this.setState({
+                            isEditMode: false,
+                        })
                     }
                     break
                 }
@@ -419,7 +424,7 @@ class Estimate extends React.Component {
     render () {
         const { items } = this.state
         return (
-            <div style={{ textAlign: 'left', margin: 20 }}>
+            <div style={styles.basics}>
                 <h1>Estimate Tool</h1>
                 <Nestable
                     ref={(nestable) => { this.nestable = nestable }}

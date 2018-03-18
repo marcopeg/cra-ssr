@@ -7,6 +7,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import InputWithFocus from './InputWithFocus'
+import minutes from './minutes'
 
 class EstimateItemNode extends React.Component {
     static propTypes = {
@@ -86,7 +87,7 @@ class EstimateItemNode extends React.Component {
             )
             : (
                 <div>
-                    <span style={{ float: 'right', background: '#ddd' }}>{this.props.estimate}</span>
+                    <span style={{ float: 'right', background: '#ddd' }}>{minutes(this.props.estimate)}</span>
                     {status}
                     {this.props.details.description}
                 </div>
