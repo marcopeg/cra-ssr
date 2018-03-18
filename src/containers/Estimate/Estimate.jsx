@@ -11,6 +11,7 @@ import Nestable from 'react-nestable'
 
 import tree2array from './tree2array'
 import tree2object from './tree2object'
+import treeDeleteNode from './tree-delete-node'
 import EstimateItem from './EstimateItem'
 
 class Estimate extends React.Component {
@@ -25,9 +26,8 @@ class Estimate extends React.Component {
     }
 
     componentWillMount () {
-        this.loadItems()
-        setInterval(() => this.saveItems(), 1000)
-        setTimeout(() => this.isVisible(1521300114906), 250)
+        setTimeout(this.loadItems)
+        // setInterval(() => this.saveItems(), 1000)
     }
 
     componentDidMount () {
@@ -80,6 +80,35 @@ class Estimate extends React.Component {
                     }
                     break
                 }
+                case '-': {
+                    if (!this.state.isEditMode) {
+                        this.deleteItem()
+                    }
+                    break
+                }
+                case 'd': {
+                    if (!this.state.isEditMode) {
+                        console.log(this.state) // eslint-disable-line
+                    }
+                    break
+                }
+                case 's': {
+                    if (!this.state.isEditMode) {
+                        this.saveItems()
+                    }
+                    break
+                }
+                case 'r': {
+                    if (!this.state.isEditMode) {
+                        this.updateStateWithItems([], {
+                            collapsedItems: [],
+                            details: {},
+                            activeItem: null,
+                            isEditMode: false,
+                        })
+                    }
+                    break
+                }
                 default: {
                     // console.log(evt.key) // eslint-disable-line
                 } // eslint-disable-line
@@ -129,6 +158,8 @@ class Estimate extends React.Component {
                     activeItem,
                     collapsedItems,
                 })
+            } else {
+                alert('It was not possible to load items')
             }
         } catch (err) {
             // eslint-disable-next-line
@@ -156,6 +187,35 @@ class Estimate extends React.Component {
         })
     }
 
+    deleteItem = () => {
+        // const {
+        //     details,
+        //     flatItemsMap,
+        //     activeItem,
+        //     collapsedItems,
+        // } = this.state
+
+        // const node = flatItemsMap[activeItem]
+        // const subtree = tree2array(node.item.children)
+
+        // // remove from tree
+        // const items = treeDeleteNode(this.state.items, this.state.activeItem)
+        // delete details[node.id]
+
+        // for (const nodeId of subtree) {
+        //     delete details[nodeId]
+        //     const idx = collapsedItems.indexOf(nodeId)
+        //     if (idx !== -1) {
+        //         collapsedItems.splice(idx, 1)
+        //     }
+        // }
+
+        // this.updateStateWithItems(items, {
+        //     details,
+        //     collapsedItems,
+        // })
+    }
+
     hasChildren = (nodeId) => {
         const node = this.state.flatItemsMap[nodeId]
         if (!node.item.children) {
@@ -167,6 +227,10 @@ class Estimate extends React.Component {
     // define if it is inside a collapsed cone
     isVisible = (nodeId) => {
         const node = this.state.flatItemsMap[nodeId]
+        if (!node) {
+            return false
+        }
+
         if (!node.parents) {
             return true
         }
@@ -219,14 +283,14 @@ class Estimate extends React.Component {
     }
 
     movePrev = () => {
-        const { flatItems } = this.state
-        let index = flatItems.indexOf(this.state.activeItem)
+        const { flatItems, activeItem } = this.state
         let nextIndex = null
         let loopGuard = 0
+        let index = flatItems.indexOf(activeItem)
 
         if (index === -1) {
             nextIndex = flatItems[flatItems.length - 1] // eslint-disable-line
-        } else if (flatItems[index + 1]) {
+        } else if (flatItems[index - 1]) {
             nextIndex = flatItems[index - 1]
         }
 
@@ -234,7 +298,7 @@ class Estimate extends React.Component {
             index = flatItems.indexOf(nextIndex)
             if (index === -1) {
                 nextIndex = flatItems[flatItems.length - 1] // eslint-disable-line
-            } else if (flatItems[index + 1]) {
+            } else if (flatItems[index - 1]) {
                 nextIndex = flatItems[index - 1]
             }
             loopGuard += 1

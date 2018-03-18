@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const tree2array = (tree, key = 'id') => {
+const tree2array = (tree = [], key = 'id') => {
     return tree
         .map(item => (
             item.children

@@ -4,8 +4,8 @@ const tree2objectsList = (tree, parents = []) =>
     tree
         .map(item => (
             item.children
-                ? [ { id: item.id, depth: parents.length, item, parents, }, ...tree2objectsList(item.children, [ ...parents, item ]) ]
-                : [{ id: item.id, depth: parents.length, item, parents, }]
+                ? [ { id: item.id, depth: parents.length || 0, item, parents, }, ...tree2objectsList(item.children, [ ...parents, item ]) ]
+                : [{ id: item.id, depth: parents.length || 0, item, parents, }]
         ))
         .reduce((acc, val) => [...acc, ...val], [])
 
