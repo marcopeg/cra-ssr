@@ -368,8 +368,8 @@ class Estimate extends React.Component {
             details={this.state.details[item.id]}
             isActive={item.id === this.state.activeItem}
             isEditable={this.state.isEditMode}
-            focusOn={this.state.focusOn}
             isLeafNode={!this.hasChildren(item.id)}
+            focusOn={this.state.focusOn}
             estimate={this.getEstimate(item.id)}
             isCollapsed={this.state.collapsedItems.indexOf(item.id) !== -1}
             onFocus={this.selectItem}
