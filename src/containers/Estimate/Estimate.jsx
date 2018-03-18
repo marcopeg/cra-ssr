@@ -12,6 +12,7 @@ import Nestable from 'react-nestable'
 import tree2array from './tree2array'
 import tree2object from './tree2object'
 import treeDeleteNode from './tree-delete-node'
+import downloadJson from './download-json'
 import EstimateItem from './EstimateItem'
 
 class Estimate extends React.Component {
@@ -106,7 +107,20 @@ class Estimate extends React.Component {
                 }
                 case 's': {
                     if (!this.state.isEditMode) {
+                        const {
+                            items,
+                            details,
+                            activeItem,
+                            collapsedItems,
+                        } = this.state
                         this.saveItems()
+
+                        downloadJson({
+                            items,
+                            details,
+                            activeItem,
+                            collapsedItems,
+                        }, 'estimate-project')
                     }
                     break
                 }
