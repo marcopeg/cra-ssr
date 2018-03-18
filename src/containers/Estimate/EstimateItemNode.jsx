@@ -24,6 +24,7 @@ class EstimateItemNode extends React.Component {
             ]),
         }).isRequired,
         estimate: PropTypes.number,
+        onToggleCollapse: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
@@ -40,7 +41,7 @@ class EstimateItemNode extends React.Component {
             : (
                 <div>
                     <span style={{ float: 'right', background: '#ddd' }}>{minutes(this.props.estimate)}</span>
-                    {status}
+                    <span onClick={this.props.onToggleCollapse}>{status}</span>
                     {this.props.details.description}
                 </div>
             )

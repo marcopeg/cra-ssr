@@ -23,6 +23,7 @@ class EstimateItemLeaf extends React.Component {
             ]),
         }).isRequired,
         estimate: PropTypes.number,
+        onToggleStatus: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
@@ -39,7 +40,7 @@ class EstimateItemLeaf extends React.Component {
             : (
                 <div>
                     <span style={{ float: 'right' }}>{minutes(this.props.estimate)}</span>
-                    {status}
+                    <span onClick={this.props.onToggleStatus}>{status}</span>
                     {this.props.details.description}
                 </div>
             )

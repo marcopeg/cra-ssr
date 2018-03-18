@@ -418,6 +418,8 @@ class Estimate extends React.Component {
             isCollapsed={this.state.collapsedItems.indexOf(item.id) !== -1}
             onFocus={this.selectItem}
             onChange={this.updateItemDetails}
+            onToggleCollapse={() => this.toggleCollapse(item)}
+            onToggleStatus={() => this.toggleStatus(item)}
         />
     )
 
