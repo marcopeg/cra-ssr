@@ -13,6 +13,7 @@ import tree2array from './tree2array'
 import tree2object from './tree2object'
 import treeDeleteNode from './tree-delete-node'
 import downloadJson from './download-json'
+import uploadJson from './upload-json'
 import EstimateItem from './EstimateItem'
 
 class Estimate extends React.Component {
@@ -29,7 +30,7 @@ class Estimate extends React.Component {
 
     componentWillMount () {
         setTimeout(this.loadItems)
-        // setInterval(() => this.saveItems(), 1000)
+        setInterval(() => this.saveItems(), 1000)
     }
 
     componentDidMount () {
@@ -124,6 +125,30 @@ class Estimate extends React.Component {
                     }
                     break
                 }
+                case 'o': {
+                    if (!this.state.isEditMode) {
+                        uploadJson()
+                            .then((doc) => {
+                                const {
+                                    items,
+                                    details,
+                                    activeItem,
+                                    collapsedItems,
+                                } = doc
+
+                                this.updateStateWithItems(items, {
+                                    details,
+                                    activeItem,
+                                    collapsedItems,
+                                })
+                            })
+                            .catch((err) => {
+                                alert('Errors loading the file') // eslint-disable-line
+                                console.error(err) // eslint-disable-line
+                            })
+                    }
+                    break
+                }
                 case 'r': {
                     if (!this.state.isEditMode) {
                         this.updateStateWithItems([], {
@@ -185,7 +210,7 @@ class Estimate extends React.Component {
                     collapsedItems,
                 })
             } else {
-                alert('It was not possible to load items')
+                console.error('It was not possible to load items')
             }
         } catch (err) {
             // eslint-disable-next-line
