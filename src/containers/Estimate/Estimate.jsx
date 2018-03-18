@@ -3,6 +3,7 @@
         react/prefer-stateless-function: off,
         no-unused-expressions: off,
         react/sort-comp: off,
+        no-restricted-syntax: off,
 *//* global localStorage document */
 
 import React from 'react'
@@ -26,6 +27,7 @@ class Estimate extends React.Component {
     componentWillMount () {
         this.loadItems()
         setInterval(() => this.saveItems(), 1000)
+        setTimeout(() => this.isVisible(1521300114906), 250)
     }
 
     componentDidMount () {
@@ -79,7 +81,7 @@ class Estimate extends React.Component {
                     break
                 }
                 default: {
-                    console.log(evt.key) // eslint-disable-line
+                    // console.log(evt.key) // eslint-disable-line
                 } // eslint-disable-line
             }
         }, false)
@@ -88,14 +90,12 @@ class Estimate extends React.Component {
         setTimeout(() => this.nestable.collapse(this.state.collapsedItems))
     }
 
-    onTreeChange = (items) => {
-        this.setState({
-            items,
-            flatItems: tree2array(items),
-            flatItemsMap: tree2object(items),
-        })
-        setTimeout(() => this.saveItems())
-    }
+    updateStateWithItems = (items, state = {}) => this.setState({
+        ...state,
+        items,
+        flatItems: tree2array(items),
+        flatItemsMap: tree2object(items),
+    })
 
     saveItems = () => {
         const {
@@ -124,10 +124,7 @@ class Estimate extends React.Component {
                     collapsedItems,
                 } = doc
 
-                this.setState({
-                    items,
-                    flatItems: tree2array(items),
-                    flatItemsMap: tree2object(items),
+                this.updateStateWithItems(items, {
                     details,
                     activeItem,
                     collapsedItems,
@@ -145,10 +142,9 @@ class Estimate extends React.Component {
             ...this.state.items,
             { id },
         ]
-        this.setState({
-            items,
-            flatItems: tree2array(items),
-            flatItemsMap: tree2object(items),
+        this.updateStateWithItems(items, {
+            activeItem: id,
+            isEditMode: true,
             details: {
                 ...this.state.details,
                 [id]: {
@@ -158,17 +154,37 @@ class Estimate extends React.Component {
                 },
             },
         })
+    }
 
-        // edit item
-        this.selectItem(id)
-        this.setState({ isEditMode: true })
+    hasChildren = (nodeId) => {
+        const node = this.state.flatItemsMap[nodeId]
+        if (!node.item.children) {
+            return false
+        }
+        return node.item.children.length > 0
+    }
+
+    // define if it is inside a collapsed cone
+    isVisible = (nodeId) => {
+        const node = this.state.flatItemsMap[nodeId]
+        if (!node.parents) {
+            return true
+        }
+
+        for (const parent of node.parents) {
+            if (this.state.collapsedItems.indexOf(parent.id) !== -1) {
+                return false
+            }
+        }
+
+        return true
     }
 
     selectItem = (activeItem) => {
         this.setState({ activeItem })
     }
 
-    updateItem = (itemId, details) => {
+    updateItemDetails = (itemId, details) => {
         this.setState({
             details: {
                 ...this.state.details,
@@ -178,29 +194,53 @@ class Estimate extends React.Component {
     }
 
     moveNext = () => {
-        const index = this.state.flatItems.indexOf(this.state.activeItem)
+        const { flatItems } = this.state
+        let index = flatItems.indexOf(this.state.activeItem)
+        let nextIndex = null
+        let loopGuard = 0
+
         if (index === -1) {
-            this.selectItem(this.state.flatItems[0])
-        } else if (this.state.flatItems[index + 1]) {
-            this.selectItem(this.state.flatItems[index + 1])
+            nextIndex = flatItems[0] // eslint-disable-line
+        } else if (flatItems[index + 1]) {
+            nextIndex = flatItems[index + 1]
         }
+
+        while (loopGuard < 100 && this.isVisible(nextIndex) !== true) {
+            index = flatItems.indexOf(nextIndex)
+            if (index === -1) {
+                nextIndex = flatItems[0] // eslint-disable-line
+            } else if (flatItems[index + 1]) {
+                nextIndex = flatItems[index + 1]
+            }
+            loopGuard += 1
+        }
+
+        this.selectItem(nextIndex)
     }
 
     movePrev = () => {
-        const index = this.state.flatItems.indexOf(this.state.activeItem)
-        if (index === -1) {
-            this.selectItem(this.state.flatItems[this.state.flatItems.lengt - 1])
-        } else if (this.state.flatItems[index - 1]) {
-            this.selectItem(this.state.flatItems[index - 1])
-        }
-    }
+        const { flatItems } = this.state
+        let index = flatItems.indexOf(this.state.activeItem)
+        let nextIndex = null
+        let loopGuard = 0
 
-    hasChildren = (nodeId) => {
-        const node = this.state.flatItemsMap[nodeId]
-        if (!node.item.children) {
-            return false
+        if (index === -1) {
+            nextIndex = flatItems[flatItems.length - 1] // eslint-disable-line
+        } else if (flatItems[index + 1]) {
+            nextIndex = flatItems[index - 1]
         }
-        return node.item.children.length > 0
+
+        while (loopGuard < 100 && this.isVisible(nextIndex) !== true) {
+            index = flatItems.indexOf(nextIndex)
+            if (index === -1) {
+                nextIndex = flatItems[flatItems.length - 1] // eslint-disable-line
+            } else if (flatItems[index + 1]) {
+                nextIndex = flatItems[index - 1]
+            }
+            loopGuard += 1
+        }
+
+        this.selectItem(nextIndex)
     }
 
     toggleCollapse = (node) => {
@@ -251,7 +291,7 @@ class Estimate extends React.Component {
             estimate={this.getEstimate(item.id)}
             isCollapsed={this.state.collapsedItems.indexOf(item.id) !== -1}
             onFocus={this.selectItem}
-            onChange={this.updateItem}
+            onChange={this.updateItemDetails}
         />
     )
 
@@ -264,7 +304,7 @@ class Estimate extends React.Component {
                     ref={(nestable) => { this.nestable = nestable }}
                     items={items}
                     renderItem={this.renderItem}
-                    onChange={this.onTreeChange}
+                    onChange={this.updateStateWithItems}
                 />
                 <hr />
                 <button onClick={this.addNewItem}>Add Item</button>

@@ -1,11 +1,11 @@
 /* eslint-disable */
 
-const tree2objectsList = (tree, depth = 0) =>
+const tree2objectsList = (tree, parents = []) =>
     tree
         .map(item => (
             item.children
-                ? [ { id: item.id, depth: depth, item }, ...tree2objectsList(item.children, depth + 1) ]
-                : [{ id: item.id, depth: depth, item }]
+                ? [ { id: item.id, depth: parents.length, item, parents, }, ...tree2objectsList(item.children, [ ...parents, item ]) ]
+                : [{ id: item.id, depth: parents.length, item, parents, }]
         ))
         .reduce((acc, val) => [...acc, ...val], [])
 
