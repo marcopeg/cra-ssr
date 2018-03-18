@@ -31,13 +31,15 @@ class EstimateItem extends React.Component {
                 PropTypes.string,
             ]),
         }).isRequired,
+        focusOn: PropTypes.string,
         estimate: PropTypes.number,
         onFocus: PropTypes.func.isRequired,
         onChange: PropTypes.func.isRequired,
     }
 
-    static defaultValues = {
+    static defaultProps = {
         estimate: null,
+        focusOn: 'description',
     }
 
     state = {
@@ -81,12 +83,13 @@ class EstimateItem extends React.Component {
             ? (
                 <div>
                     <InputWithFocus
-                        hasFocus
+                        hasFocus={this.props.focusOn === 'description'}
                         value={this.state.details.description}
                         onChange={this.updateDescription}
                         onCancel={() => { }}
                     />
                     <InputWithFocus
+                        hasFocus={this.props.focusOn === 'estimate'}
                         value={this.state.details.estimate}
                         onChange={this.updateEstimate}
                         style={{ float: 'right' }}

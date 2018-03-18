@@ -23,6 +23,7 @@ class Estimate extends React.Component {
         details: {},
         activeItem: null,
         isEditMode: false,
+        focusOn: 'description',
     }
 
     componentWillMount () {
@@ -49,10 +50,22 @@ class Estimate extends React.Component {
                 }
                 case 'Enter': {
                     if (this.state.isEditMode === false && this.state.activeItem !== null) {
-                        this.setState({ isEditMode: true })
+                        this.setState({
+                            isEditMode: true,
+                            focusOn: 'description',
+                        })
                     } else {
                         console.log('should save changes')
                         this.setState({ isEditMode: false })
+                    }
+                    break
+                }
+                case 'e': {
+                    if (this.state.isEditMode === false && this.state.activeItem !== null) {
+                        this.setState({
+                            isEditMode: true,
+                            focusOn: 'estimate',
+                        })
                     }
                     break
                 }
@@ -356,6 +369,7 @@ class Estimate extends React.Component {
             details={this.state.details[item.id]}
             isActive={item.id === this.state.activeItem}
             isEditable={this.state.isEditMode}
+            focusOn={this.state.focusOn}
             isLeafNode={!this.hasChildren(item.id)}
             estimate={this.getEstimate(item.id)}
             isCollapsed={this.state.collapsedItems.indexOf(item.id) !== -1}
