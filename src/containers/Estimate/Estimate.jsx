@@ -55,8 +55,7 @@ class Estimate extends React.Component {
                             focusOn: 'description',
                         })
                     } else {
-                        console.log('should save changes')
-                        this.setState({ isEditMode: false })
+                        this.moveNext()
                     }
                     break
                 }
