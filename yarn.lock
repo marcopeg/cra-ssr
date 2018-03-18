@@ -3100,7 +3100,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.15, fbjs@^0.8.16, fbjs@^0.8.9:
+fbjs@^0.8.15, fbjs@^0.8.16, fbjs@^0.8.4, fbjs@^0.8.9:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -6526,6 +6526,20 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-addons-shallow-compare@^15.3.1:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-15.6.2.tgz#198a00b91fc37623db64a28fd17b596ba362702f"
+  dependencies:
+    fbjs "^0.8.4"
+    object-assign "^4.1.0"
+
+react-addons-update@^15.3.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.6.2.tgz#e53753c5b34887974510c882d7fb075851d5e504"
+  dependencies:
+    fbjs "^0.8.9"
+    object-assign "^4.1.0"
+
 react-app-rewired@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/react-app-rewired/-/react-app-rewired-1.5.0.tgz#8889d2f9ae8d8af16b340ca5424ffd5a07d23af2"
@@ -6555,6 +6569,15 @@ react-dev-utils@^5.0.0:
     sockjs-client "1.1.4"
     strip-ansi "3.0.1"
     text-table "0.2.0"
+
+react-dom@^15.3.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
 
 react-dom@^16.2.0:
   version "16.2.0"
@@ -6586,6 +6609,17 @@ react-lazy-load@^3.0.12:
     lodash.debounce "^4.0.0"
     lodash.throttle "^4.0.0"
     prop-types "^15.5.8"
+
+react-nestable@^1.0.22:
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/react-nestable/-/react-nestable-1.0.22.tgz#6a96fbeeaad05207bd3dc15db5e73b72567eeb80"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
+    react "^15.3.2"
+    react-addons-shallow-compare "^15.3.1"
+    react-addons-update "^15.3.2"
+    react-dom "^15.3.2"
 
 react-redux@^5.0.7:
   version "5.0.7"
@@ -6687,6 +6721,16 @@ react-slick@~0.17.0:
     json2mq "^0.2.0"
     object-assign "^4.1.0"
     opencollective "^1.0.3"
+
+react@^15.3.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
+  dependencies:
+    create-react-class "^15.6.0"
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
 
 react@^16.2.0:
   version "16.2.0"
