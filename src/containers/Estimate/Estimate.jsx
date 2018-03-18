@@ -4,16 +4,15 @@
         no-unused-expressions: off,
         react/sort-comp: off,
         no-restricted-syntax: off,
-*//* global localStorage document */
+*/
 
 import React from 'react'
 import Nestable from 'react-nestable'
 
-import tree2array from './tree2array'
-import tree2object from './tree2object'
-import treeDeleteNode from './tree-delete-node'
-import downloadJson from './download-json'
-import uploadJson from './upload-json'
+import { loadFromBrowser, saveToBrowser, saveToDisk, loadFromDisk } from './utils/storage'
+import tree2array from './utils/tree2array'
+import tree2object from './utils/tree2object'
+import treeDeleteNode from './utils/tree-delete-node'
 import EstimateItem from './EstimateItem'
 
 const styles = {}
@@ -36,8 +35,9 @@ class Estimate extends React.Component {
     }
 
     componentWillMount () {
-        setTimeout(this.loadItems)
-        setInterval(() => this.saveItems(), 1000)
+        setTimeout(() => loadFromBrowser(this))
+        // setTimeout(this.loadItems)
+        setInterval(() => saveToBrowser(this), 1000)
     }
 
     componentDidMount () {
@@ -113,44 +113,13 @@ class Estimate extends React.Component {
                 }
                 case 's': {
                     if (!this.state.isEditMode) {
-                        const {
-                            items,
-                            details,
-                            activeItem,
-                            collapsedItems,
-                        } = this.state
-                        this.saveItems()
-
-                        downloadJson({
-                            items,
-                            details,
-                            activeItem,
-                            collapsedItems,
-                        }, 'estimate-project')
+                        saveToDisk(this)
                     }
                     break
                 }
                 case 'o': {
                     if (!this.state.isEditMode) {
-                        uploadJson()
-                            .then((doc) => {
-                                const {
-                                    items,
-                                    details,
-                                    activeItem,
-                                    collapsedItems,
-                                } = doc
-
-                                this.updateStateWithItems(items, {
-                                    details,
-                                    activeItem,
-                                    collapsedItems,
-                                })
-                            })
-                            .catch((err) => {
-                                alert('Errors loading the file') // eslint-disable-line
-                                console.error(err) // eslint-disable-line
-                            })
+                        loadFromDisk(this)
                     }
                     break
                 }
@@ -181,47 +150,6 @@ class Estimate extends React.Component {
         flatItems: tree2array(items),
         flatItemsMap: tree2object(items),
     })
-
-    saveItems = () => {
-        const {
-            items,
-            details,
-            activeItem,
-            collapsedItems,
-        } = this.state
-
-        localStorage.setItem('estimate-doc', JSON.stringify({
-            items,
-            details,
-            activeItem,
-            collapsedItems,
-        }))
-    }
-
-    loadItems = () => {
-        try {
-            const doc = JSON.parse(localStorage.getItem('estimate-doc'))
-            if (doc) {
-                const {
-                    items,
-                    details,
-                    activeItem,
-                    collapsedItems,
-                } = doc
-
-                this.updateStateWithItems(items, {
-                    details,
-                    activeItem,
-                    collapsedItems,
-                })
-            } else {
-                console.error('It was not possible to load items')
-            }
-        } catch (err) {
-            // eslint-disable-next-line
-            alert('It was not possible to load items')
-        }
-    }
 
     addNewItem = () => {
         const id = Date.now()

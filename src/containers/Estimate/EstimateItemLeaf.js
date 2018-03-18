@@ -7,7 +7,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import InlineEditForm from './InlineEditForm'
-import minutes from './minutes'
+import minutes from './utils/minutes'
 
 class EstimateItemLeaf extends React.Component {
     static propTypes = {
