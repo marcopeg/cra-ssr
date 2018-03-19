@@ -443,4 +443,9 @@ export default Estimate
 
 // prevent space bar page scrolling
 // eslint-disable-next-line
-// window.onkeydown = function (e) { return !(e.keyCode == 32) }
+window.onkeydown = function (e) {
+    if (e.target.nodeName === 'INPUT') {
+        return true
+    }
+    return !(e.keyCode === 32)
+}
