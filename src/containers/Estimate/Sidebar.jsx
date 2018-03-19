@@ -7,7 +7,8 @@ const styles = {}
 styles.wrapper = {
     display: 'flex',
     flexDirection: 'column',
-    width: 300,
+    width: '30vw',
+    minWidth: 300,
     overflow: 'auto',
     borderLeft: '2px solid #666',
     marginLeft: 5,

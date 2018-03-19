@@ -17,6 +17,8 @@ import EstimateItem from './EstimateItem'
 import ProjectTitle from './ProjectTitle'
 import Sidebar from './Sidebar'
 
+import './estimate.css'
+
 const styles = {}
 styles.basics = {
     textAlign: 'left',
@@ -45,6 +47,9 @@ styles.ui.nestable = {
     flex: 1,
     display: 'flex',
     overflow: 'auto',
+}
+styles.nestableComponent = {
+    flex: '1',
 }
 
 class Estimate extends React.Component {
@@ -464,6 +469,7 @@ class Estimate extends React.Component {
                             items={items}
                             renderItem={this.renderItem}
                             onChange={this.updateStateWithItems}
+                            style={styles.nestableComponent}
                         />
                     </div>
                     {this.state.activeItem ? (
