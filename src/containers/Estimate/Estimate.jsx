@@ -4,7 +4,7 @@
         no-unused-expressions: off,
         react/sort-comp: off,
         no-restricted-syntax: off,
-*//* global document */
+*//* global document window */
 
 import React from 'react'
 import Nestable from 'react-nestable'
@@ -56,7 +56,7 @@ class Estimate extends React.Component {
 
     componentWillMount () {
         setTimeout(() => loadFromBrowser(this))
-        setInterval(() => saveToBrowser(this), 1000)
+        this.saveInterval = setInterval(() => saveToBrowser(this), 1000)
     }
 
     componentDidMount () {
@@ -77,7 +77,7 @@ class Estimate extends React.Component {
                     break
                 }
                 case 'Enter': {
-                    if (evt.altKey || evt.ctrlKey) {
+                    if (evt.altKey || evt.ctrlKey || evt.shiftKey) {
                         this.addNewItem()
                     } else if (this.state.isEditMode === false && this.state.activeItem !== null) {
                         this.setState({
@@ -152,8 +152,12 @@ class Estimate extends React.Component {
                     }
                     break
                 }
-                case 'r': {
+                case 'n': {
                     if (!this.state.isEditMode) {
+                        // eslint-disable-next-line
+                        if (!confirm('Discard local changes and start a new project?')) {
+                            return
+                        }
                         this.updateStateWithItems([], {
                             title: 'New project',
                             collapsedItems: [],
@@ -170,8 +174,27 @@ class Estimate extends React.Component {
             }
         }, false)
 
+        window.addEventListener('keydown', this.handleSpaceKeyboard, false)
+
         // init collapsed documents
         setTimeout(() => this.nestable.collapse(this.state.collapsedItems))
+    }
+
+    componentWillUnmount () {
+        clearInterval(this.saveInterval)
+        window.removeEventListener('keydown', this.handleSpaceKeyboard, false)
+    }
+
+    handleSpaceKeyboard = (e) => {
+        if (e.keyCode !== 32) {
+            return true
+        }
+        if (e.target.nodeName === 'INPUT') {
+            return true
+        }
+
+        e.preventDefault()
+        return false
     }
 
     keyboardOff = () => this.setState({
@@ -432,6 +455,7 @@ class Estimate extends React.Component {
                         "Space" -> collapse sections or mark a requirement as done<br />
                         "s" -> save project to disk<br />
                         "o" -> open a saved project<br />
+                        "n" -> start a new project<br />
                     </pre>
                 </div>
             </div>
@@ -443,9 +467,9 @@ export default Estimate
 
 // prevent space bar page scrolling
 // eslint-disable-next-line
-window.onkeydown = function (e) {
-    if (e.target.nodeName === 'INPUT') {
-        return true
-    }
-    return !(e.keyCode === 32)
-}
+// window.onkeydown = function (e) {
+//     if (e.target.nodeName === 'INPUT') {
+//         return true
+//     }
+//     return !(e.keyCode === 32)
+// }
