@@ -315,7 +315,11 @@ class Estimate extends React.Component {
     }
 
     selectItem = (activeItem) => {
-        this.setState({ activeItem })
+        if (this.state.activeItem === activeItem) {
+            this.setState({ isEditMode: true })
+        } else {
+            this.setState({ activeItem })
+        }
     }
 
     updateItemDetails = (itemId, details) => {

@@ -24,10 +24,17 @@ styles.help = {
 }
 styles.title = {
     fontSize: '12pt',
+    margin: 0,
+    padding: 10,
 }
 styles.notes = {
     flex: 1,
     height: 100,
+    fontSize: '12pt',
+    outline: 'none',
+    padding: 10,
+    borderRadius: 4,
+    borderColor: '#666',
 }
 
 const Sidebar = ({
