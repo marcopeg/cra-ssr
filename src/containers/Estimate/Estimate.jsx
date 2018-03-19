@@ -15,6 +15,7 @@ import tree2object from './utils/tree2object'
 import treeDeleteNode from './utils/tree-delete-node'
 import EstimateItem from './EstimateItem'
 import ProjectTitle from './ProjectTitle'
+import Sidebar from './Sidebar'
 
 const styles = {}
 styles.basics = {
@@ -30,14 +31,20 @@ styles.welcome = {
     marginBottom: 20,
     padding: 20,
 }
-styles.shortcuts = {
-    background: '#ddd',
-    padding: 20,
-}
 styles.header = {
     borderBottom: '2px solid black',
     marginBottom: 10,
     paddingBottom: 10,
+}
+styles.ui = {}
+styles.ui.wrapper = {
+    display: 'flex',
+    height: '70vh',
+}
+styles.ui.nestable = {
+    flex: 1,
+    display: 'flex',
+    overflow: 'auto',
 }
 
 class Estimate extends React.Component {
@@ -400,6 +407,18 @@ class Estimate extends React.Component {
         return parseInt(this.state.details[nodeId].estimate, 10) || 0
     }
 
+    updateDetailsField = fieldName => (evt) => {
+        this.setState({
+            details: {
+                ...this.state.details,
+                [this.state.activeItem]: {
+                    ...this.state.details[this.state.activeItem],
+                    [fieldName]: evt.target.value,
+                },
+            },
+        })
+    }
+
     renderItem = ({ item }) => (
         <EstimateItem
             id={item.id}
@@ -435,41 +454,31 @@ class Estimate extends React.Component {
                         <p>Click "Add Item" (or just type "a") to add your first requirement.</p>
                     </div>
                 )}
-                <Nestable
-                    ref={(nestable) => { this.nestable = nestable }}
-                    items={items}
-                    renderItem={this.renderItem}
-                    onChange={this.updateStateWithItems}
-                />
+                <div style={styles.ui.wrapper}>
+                    <div style={styles.ui.nestable}>
+                        <Nestable
+                            ref={(nestable) => { this.nestable = nestable }}
+                            items={items}
+                            renderItem={this.renderItem}
+                            onChange={this.updateStateWithItems}
+                        />
+                    </div>
+                    {this.state.activeItem ? (
+                        <Sidebar
+                            {...this.state.details[this.state.activeItem]}
+                            updateField={this.updateDetailsField}
+                            onEditStart={this.keyboardOff}
+                            onEditEnd={this.keyboardOn}
+                        />
+                    ) : null}
+                </div>
                 <hr />
                 <button onClick={this.addNewItem}>+ Add Item</button>
                 <button onClick={() => saveToDisk(this)}>Save Project</button>
                 <button onClick={() => loadFromDisk(this)}>Open Project</button>
-                <hr />
-                <div>
-                    <h3>Keyboard Shortcuts:</h3>
-                    <pre style={styles.shortcuts}>
-                        "a", "+", "alt + Enter" -> Add new requirement<br />
-                        "Enter" -> activate / deactivate edit mode<br />
-                        "e" -> enter editing mode and focus on the estimate field<br />
-                        "Space" -> collapse sections or mark a requirement as done<br />
-                        "s" -> save project to disk<br />
-                        "o" -> open a saved project<br />
-                        "n" -> start a new project<br />
-                    </pre>
-                </div>
             </div>
         )
     }
 }
 
 export default Estimate
-
-// prevent space bar page scrolling
-// eslint-disable-next-line
-// window.onkeydown = function (e) {
-//     if (e.target.nodeName === 'INPUT') {
-//         return true
-//     }
-//     return !(e.keyCode === 32)
-// }
