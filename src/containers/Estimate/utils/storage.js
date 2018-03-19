@@ -1,7 +1,17 @@
-/* global localStorage */
+/* global localStorage window */
 
 import downloadJson from './download-json'
 import uploadJson from './upload-json'
+
+export const hipenize = str => str.replace(/ +/g, '-').toLowerCase()
+
+export const getStorageName = ctx => hipenize(ctx.state.title)
+
+const getLocalStorageName = ctx => (
+    ctx.props.match.params.projectId
+        ? `estimate-${ctx.props.match.params.projectId}`
+        : 'estimate-default'
+)
 
 export const saveToBrowser = (ctx) => {
     const {
@@ -12,7 +22,7 @@ export const saveToBrowser = (ctx) => {
         collapsedItems,
     } = ctx.state
 
-    localStorage.setItem('estimate-doc', JSON.stringify({
+    localStorage.setItem(getLocalStorageName(ctx), JSON.stringify({
         title,
         items,
         details,
@@ -23,7 +33,7 @@ export const saveToBrowser = (ctx) => {
 
 export const loadFromBrowser = (ctx) => {
     try {
-        const doc = JSON.parse(localStorage.getItem('estimate-doc'))
+        const doc = JSON.parse(localStorage.getItem(getLocalStorageName(ctx)))
         if (doc) {
             const {
                 title,
@@ -49,6 +59,15 @@ export const loadFromBrowser = (ctx) => {
     }
 }
 
+export const updateProjectUrl = (ctx) => {
+    setTimeout(() => {
+        saveToBrowser(ctx)
+        setTimeout(() => {
+            window.location.href = `/#/estimate/${getStorageName(ctx)}`
+        })
+    })
+}
+
 export const saveToDisk = (ctx) => {
     const {
         title,
@@ -65,7 +84,7 @@ export const saveToDisk = (ctx) => {
         details,
         activeItem,
         collapsedItems,
-    }, 'estimate-project')
+    }, getStorageName(ctx))
 }
 
 export const loadFromDisk = (ctx) => {
@@ -85,6 +104,9 @@ export const loadFromDisk = (ctx) => {
                 activeItem,
                 collapsedItems,
             })
+
+            updateProjectUrl(ctx)
+            // history.push(`/estimate/${hipenize(title || 'A new project')}`)
         })
         .catch((err) => {
             alert('Errors loading the file') // eslint-disable-line

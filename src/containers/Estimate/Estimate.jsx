@@ -9,7 +9,7 @@
 import React from 'react'
 import Nestable from 'react-nestable'
 
-import { loadFromBrowser, saveToBrowser, saveToDisk, loadFromDisk } from './utils/storage'
+import { loadFromBrowser, saveToBrowser, saveToDisk, loadFromDisk, updateProjectUrl } from './utils/storage'
 import tree2array from './utils/tree2array'
 import tree2object from './utils/tree2object'
 import treeDeleteNode from './utils/tree-delete-node'
@@ -155,6 +155,7 @@ class Estimate extends React.Component {
                 case 'r': {
                     if (!this.state.isEditMode) {
                         this.updateStateWithItems([], {
+                            title: 'New project',
                             collapsedItems: [],
                             details: {},
                             activeItem: null,
@@ -187,6 +188,11 @@ class Estimate extends React.Component {
         flatItems: tree2array(items),
         flatItemsMap: tree2object(items),
     })
+
+    changeTitle = (title) => {
+        this.setState({ title })
+        setTimeout(() => updateProjectUrl(this))
+    }
 
     addNewItem = () => {
         const id = Date.now()
@@ -397,7 +403,7 @@ class Estimate extends React.Component {
                         value={this.state.title}
                         onEditStart={this.keyboardOff}
                         onEditEnd={this.keyboardOn}
-                        onChange={title => this.setState({ title })}
+                        onChange={this.changeTitle}
                     />
                 </div>
                 {items.length ? null : (
@@ -434,3 +440,7 @@ class Estimate extends React.Component {
 }
 
 export default Estimate
+
+// prevent space bar page scrolling
+// eslint-disable-next-line
+// window.onkeydown = function (e) { return !(e.keyCode == 32) }

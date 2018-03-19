@@ -40,7 +40,7 @@ const App = () => (
         <Route exact path="/p" component={Posts} />
         <Route path="/p/:postId" component={PostDetails} />
         <Route path="/u*" component={Users} />
-        <Route path="/estimate" component={Estimate} />
+        <Route path="/estimate/:projectId?" component={Estimate} />
     </div>
 )
 
