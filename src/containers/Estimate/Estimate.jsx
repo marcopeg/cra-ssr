@@ -196,7 +196,10 @@ class Estimate extends React.Component {
         if (e.keyCode !== 32) {
             return true
         }
-        if (e.target.nodeName === 'INPUT') {
+        if ([
+            'INPUT',
+            'TEXTAREA',
+        ].indexOf(e.target.nodeName) !== -1) {
             return true
         }
 
