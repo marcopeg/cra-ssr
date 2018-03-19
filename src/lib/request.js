@@ -1,5 +1,5 @@
 /* global fetch */
-// import { pause } from './utils'
+import { pause } from './utils'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -8,7 +8,7 @@ require('isomorphic-fetch')
 const wrappedFetch = async (url, config = null) => {
     try {
         if (process.env.NODE_ENV === 'development') {
-            // await pause(500)
+            await pause(500)
         }
         return fetch(url, config)
     } catch (err) {

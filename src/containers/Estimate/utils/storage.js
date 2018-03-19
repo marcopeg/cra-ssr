@@ -63,7 +63,8 @@ export const updateProjectUrl = (ctx) => {
     setTimeout(() => {
         saveToBrowser(ctx)
         setTimeout(() => {
-            window.location.href = `/#/estimate/${getStorageName(ctx)}`
+            const baseUrl = window.location.href.split('/#/')[0]
+            window.location.href = `${baseUrl}/#/estimate/${getStorageName(ctx)}`
         })
     })
 }
@@ -106,7 +107,6 @@ export const loadFromDisk = (ctx) => {
             })
 
             updateProjectUrl(ctx)
-            // history.push(`/estimate/${hipenize(title || 'A new project')}`)
         })
         .catch((err) => {
             alert('Errors loading the file') // eslint-disable-line
