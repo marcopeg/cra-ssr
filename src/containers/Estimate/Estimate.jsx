@@ -14,6 +14,7 @@ import tree2array from './utils/tree2array'
 import tree2object from './utils/tree2object'
 import treeDeleteNode from './utils/tree-delete-node'
 import EstimateItem from './EstimateItem'
+import ProjectTitle from './ProjectTitle'
 
 const styles = {}
 styles.basics = {
@@ -33,9 +34,15 @@ styles.shortcuts = {
     background: '#ddd',
     padding: 20,
 }
+styles.header = {
+    borderBottom: '2px solid black',
+    marginBottom: 10,
+    paddingBottom: 10,
+}
 
 class Estimate extends React.Component {
     state = {
+        title: 'A new project...',
         items: [],
         flatItems: [],
         flatItemsMap: {},
@@ -44,6 +51,7 @@ class Estimate extends React.Component {
         activeItem: null,
         isEditMode: false,
         focusOn: 'description',
+        keyboardEvents: true,
     }
 
     componentWillMount () {
@@ -53,6 +61,10 @@ class Estimate extends React.Component {
 
     componentDidMount () {
         document.addEventListener('keyup', (evt) => {
+            if (this.state.keyboardEvents !== true) {
+                return
+            }
+
             switch (evt.key) {
                 case 'ArrowUp': {
                     this.movePrev()
@@ -160,6 +172,14 @@ class Estimate extends React.Component {
         // init collapsed documents
         setTimeout(() => this.nestable.collapse(this.state.collapsedItems))
     }
+
+    keyboardOff = () => this.setState({
+        keyboardEvents: false,
+    })
+
+    keyboardOn = () => this.setState({
+        keyboardEvents: true,
+    })
 
     updateStateWithItems = (items, state = {}) => this.setState({
         ...state,
@@ -372,7 +392,14 @@ class Estimate extends React.Component {
         const { items } = this.state
         return (
             <div style={styles.basics}>
-                <h1>Estimate Tool</h1>
+                <div style={styles.header}>
+                    <ProjectTitle
+                        value={this.state.title}
+                        onEditStart={this.keyboardOff}
+                        onEditEnd={this.keyboardOn}
+                        onChange={title => this.setState({ title })}
+                    />
+                </div>
                 {items.length ? null : (
                     <div style={styles.welcome}>
                         <p>Welcome to a new experience in discovering your requirements!</p>

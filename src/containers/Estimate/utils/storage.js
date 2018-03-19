@@ -5,6 +5,7 @@ import uploadJson from './upload-json'
 
 export const saveToBrowser = (ctx) => {
     const {
+        title,
         items,
         details,
         activeItem,
@@ -12,6 +13,7 @@ export const saveToBrowser = (ctx) => {
     } = ctx.state
 
     localStorage.setItem('estimate-doc', JSON.stringify({
+        title,
         items,
         details,
         activeItem,
@@ -24,6 +26,7 @@ export const loadFromBrowser = (ctx) => {
         const doc = JSON.parse(localStorage.getItem('estimate-doc'))
         if (doc) {
             const {
+                title,
                 items,
                 details,
                 activeItem,
@@ -31,6 +34,7 @@ export const loadFromBrowser = (ctx) => {
             } = doc
 
             ctx.updateStateWithItems(items, {
+                title: title || 'A new project', // backward compatibility
                 details,
                 activeItem,
                 collapsedItems,
@@ -47,6 +51,7 @@ export const loadFromBrowser = (ctx) => {
 
 export const saveToDisk = (ctx) => {
     const {
+        title,
         items,
         details,
         activeItem,
@@ -55,6 +60,7 @@ export const saveToDisk = (ctx) => {
     saveToBrowser(ctx)
 
     downloadJson({
+        title,
         items,
         details,
         activeItem,
@@ -66,6 +72,7 @@ export const loadFromDisk = (ctx) => {
     uploadJson()
         .then((doc) => {
             const {
+                title,
                 items,
                 details,
                 activeItem,
@@ -73,6 +80,7 @@ export const loadFromDisk = (ctx) => {
             } = doc
 
             ctx.updateStateWithItems(items, {
+                title: title || 'A new project', // backward compatibility
                 details,
                 activeItem,
                 collapsedItems,
