@@ -1,4 +1,4 @@
-/* global localStorage window */
+/* global localStorage window document */
 
 import downloadJson from './download-json'
 import uploadJson from './upload-json'
@@ -112,4 +112,39 @@ export const loadFromDisk = (ctx) => {
             alert('Errors loading the file') // eslint-disable-line
             console.error(err) // eslint-disable-line
         })
+}
+
+const str2csv = str => [
+    '"',
+    str.replace(/"/g, '""'),
+    '"',
+].join('')
+
+export const exportCsv = (ctx) => {
+    const rows = ctx.state.flatItems.map(id => [
+        id,
+        ctx.state.flatItemsMap[id].depth.toString(),
+        (
+            (
+                ctx.state.flatItemsMap[id].item.children
+                && ctx.state.flatItemsMap[id].item.children.length
+            )
+                ? '-'
+                : ctx.state.details[id].estimate.toString()
+        ),
+        str2csv(ctx.state.details[id].description),
+        str2csv(ctx.state.details[id].notes || ''),
+    ].join(','))
+
+    const csv = [
+        [ 'id', 'level', 'estimate', 'subject', 'notes' ].join(','),
+        ...rows,
+    ].join('\n')
+
+    const dataStr = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv) // eslint-disable-line
+    const downloadAnchorNode = document.createElement('a')
+    downloadAnchorNode.setAttribute('href', dataStr)
+    downloadAnchorNode.setAttribute('download', getStorageName(ctx) + '.csv') // eslint-disable-line
+    downloadAnchorNode.click()
+    downloadAnchorNode.remove()
 }

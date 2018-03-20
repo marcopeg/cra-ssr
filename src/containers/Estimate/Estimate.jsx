@@ -9,7 +9,15 @@
 import React from 'react'
 import Nestable from 'react-nestable'
 
-import { loadFromBrowser, saveToBrowser, saveToDisk, loadFromDisk, updateProjectUrl } from './utils/storage'
+import {
+    loadFromBrowser,
+    saveToBrowser,
+    saveToDisk,
+    loadFromDisk,
+    updateProjectUrl,
+    exportCsv,
+} from './utils/storage'
+
 import tree2array from './utils/tree2array'
 import tree2object from './utils/tree2object'
 import treeDeleteNode from './utils/tree-delete-node'
@@ -489,6 +497,7 @@ class Estimate extends React.Component {
                 <button onClick={this.addNewItem}>+ Add Item</button>
                 <button onClick={() => saveToDisk(this)}>Save Project</button>
                 <button onClick={() => loadFromDisk(this)}>Open Project</button>
+                <button onClick={() => exportCsv(this)}>Export CSV</button>
             </div>
         )
     }
